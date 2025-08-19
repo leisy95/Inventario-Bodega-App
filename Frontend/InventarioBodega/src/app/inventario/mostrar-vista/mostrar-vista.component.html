@@ -1,0 +1,101 @@
+<div class="container">
+    <div class="info-etiqueta">
+        <div class="referencia">
+            <form (ngSubmit)="buscar()">
+                <div class="referencia">
+                    <!-- Hacemos uso de Angular material -->
+                    <mat-form-field appearance="outline" floatLabel="always" class="form-field">
+                        <mat-label>Referencia</mat-label>
+                        <input matInput [formControl]="referenciaControl" [matAutocomplete]="auto"
+                            placeholder="Ej.1R0BL9009.0*000.0*4.00 ">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let ref of referenciasFiltradas | async" [value]="ref">
+                                {{ ref }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" type="submit">Buscar</button>
+
+                    <mat-form-field appearance="outline" floatLabel="always" class="form-field">
+                        <mat-label>Peso (kg)</mat-label>
+                        <input matInput type="number" [(ngModel)]="pesoIngresado" [ngModelOptions]="{standalone: true}"
+                            placeholder="Ingrese el peso">
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" (click)="agregarPeso()">
+                        Ingresar Peso
+                    </button>
+
+                </div>
+            </form>
+
+        </div>
+        
+        <h1>Etiqueta de Impresion</h1>
+        <div class="etiqueta" *ngIf="inventario && inventario.referencia">
+            <div class="codigo-barras">
+                <ngx-barcode6 class="barcode" [bc-format]="'CODE128'" [bc-value]="inventario.referencia" [bc-display-value]="true"
+                    [bc-width]="2" [bc-height]="60">
+                </ngx-barcode6>
+            </div>
+            <div class="contenido">
+                <div class="tabla-datos">
+                    <div class="header">Ancho</div>
+                    <div class="header">FL</div>
+                    <div class="header">Largo</div>
+                    <div class="header">FF</div>
+                    <div class="header">FS</div>
+                    <div class="header">Unidad</div>
+                    <div class="header">Calibre</div>
+
+                    <div>{{ inventario.ancho || 0 }}</div>
+                    <div>{{ inventario.fl || 0 }}</div>
+                    <div>{{ inventario.alto || 0 }}</div>
+                    <div>{{ inventario.ff || 0 }}</div>
+                    <div>{{ inventario.fs || 0 }}</div>
+                    <div>{{ inventario.unidad || 'PG' }}</div>
+                    <div>{{ inventario.calibre || 0 }}</div>
+                </div>
+
+                <div class="cuadros">
+                    <div class="cuadro">
+                        <div class="titulo">Material</div>
+                        {{ inventario.tipoMaterial || 0 }}
+                    </div>
+                    <div class="cuadro">
+                        <div class="titulo">Densidad</div>
+                        {{ inventario.densidad || 0 }}
+                    </div>
+                    <div class="cuadro">
+                        <div class="titulo">Color</div>
+                        {{ inventario.color || 0 }}
+                    </div>
+                    <div class="cuadro">
+                        <div class="titulo">Troquel</div>
+                        {{ inventario.troquel || 0 }}
+                    </div>
+                </div>
+
+                <div class="referencia-impresa">
+                    Referencia Impresa<br>
+                    {{ inventario.referenciaImpresa || ''}}
+                </div>
+
+                <div class="tabla-datos-bottom">
+                    <div class="cuadro">
+                        <div class="titulo">Paqu N°</div>
+                        {{ inventario.paqueteNumero || 0 }}
+                    </div>
+                    <div class="cuadro">
+                        <div class="titulo">Paq x</div>
+                        {{ inventario.paqueteCantidad || 0 }}
+                    </div>
+                    <div class="cuadro">
+                        <div class="titulo">Peso KG</div>
+                        {{ pesoActual || 0 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button mat-raised-button color="primary" (click)="imprimirEtiqueta()">Imprimir</button>
+    </div>
+</div>

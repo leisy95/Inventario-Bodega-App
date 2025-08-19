@@ -1,0 +1,210 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.info-etiqueta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    /* separa los bloques */
+    font-family: Arial, sans-serif;
+}
+
+.referencia {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.form-field {
+    width: 300px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-field mat-label {
+    color: #0056b3;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.form-field input {
+    font-size: 1rem;
+    padding: 4px 0;
+}
+
+button .referencia input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+h1 {
+    font-size: 22px;
+    color: #222;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.etiqueta {
+    display: flex;
+    border: 1px solid #000;
+    padding: 20px;
+    width: 800px;
+    font-size: 18px;
+}
+
+/*Codigo barras */
+.codigo-barras {
+    width: 80px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+ngx-barcode6 {
+    transform: rotate(-90deg);
+    transform-origin: center;
+}
+
+.contenido {
+    flex: 1;
+    margin-left: 30px;
+}
+
+.tabla-datos {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border: 1px solid #000;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.tabla-datos div {
+    border-right: 1px solid #000;
+    border-bottom: 1px solid #000;
+    padding: 5px 0;
+}
+
+.tabla-datos div:last-child {
+    border-right: none;
+}
+
+.tabla-datos .header {
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+.cuadros {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.cuadro {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.cuadro .titulo {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.referencia-impresa {
+    border: 1px solid #000;
+    height: 80px;
+    text-align: center;
+    line-height: 40px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    user-select: none;
+}
+
+.tabla-datos-bottom {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.tabla-datos-bottom .cuadro {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.tabla-datos-bottom .titulo {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Imprimir Etiqueta */
+
+@media print {
+
+    @page {
+        size: 152mm 100mm;
+        margin: 0;
+    }
+
+    .container {
+        margin: 0;
+        padding-top: 0;
+        padding-left: 6%;
+        padding-bottom: 6%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100mm;
+        width: 152mm;
+    }
+
+    .etiqueta {
+        width: 152mm;
+        text-align: center;
+        page-break-inside: avoid;
+    }
+
+    .referencia, h1 {
+        padding: 0;
+        margin: 0;
+    }
+
+    .referencia,
+    button {
+        visibility: hidden;
+    }
+}

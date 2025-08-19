@@ -1,0 +1,11 @@
+@InventarioBackend_HostAddress = http://localhost:5244
+
+GET {{InventarioBackend_HostAddress}}/todos/
+Accept: application/json
+
+###
+
+GET {{InventarioBackend_HostAddress}}/todos/1
+Accept: application/json
+
+###
