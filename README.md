@@ -22,3 +22,7 @@ Aplicación web para la gestión de inventarios en bodegas, permitiendo controla
 ```bash
 git clone https://github.com/TuUsuarioNuevo/Sistema-Inventario-Bodega.git
 cd Sistema-Inventario-Bodega
+
+## Capturas de pantalla
+
+![Pantalla de inicio](assets/captura1.png)
