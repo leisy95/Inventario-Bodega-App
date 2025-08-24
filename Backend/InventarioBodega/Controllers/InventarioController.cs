@@ -28,8 +28,11 @@ namespace InventarioBackend.Controllers
         [HttpGet("buscar/{referencia}")]
         public async Task<ActionResult<Inventario>> GetByReferencia(string referencia)
         {
+            var refNormalizada = referencia.Replace(".", "").Replace("*", "");
+
+            // Buscar en la columna indexada
             var inventario = await _context.Inventarios
-                                           .FirstOrDefaultAsync(i => i.Referencia.ToString() == referencia);
+                .FirstOrDefaultAsync(i => i.ReferenciaNormalizada == refNormalizada);
 
             if (inventario == null)
                 return NotFound(new { mensaje = "Referencia no encontrada" });
@@ -43,8 +46,10 @@ namespace InventarioBackend.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var refNormalizada = input.Referencia.Replace(".", "").Replace("*", "");
+
             var producto = await _context.Inventarios
-                                         .FirstOrDefaultAsync(p => p.Referencia == input.Referencia);
+                                 .FirstOrDefaultAsync(p => p.ReferenciaNormalizada == refNormalizada);
 
             if (producto == null)
                 return NotFound("Referencia no encontrada");

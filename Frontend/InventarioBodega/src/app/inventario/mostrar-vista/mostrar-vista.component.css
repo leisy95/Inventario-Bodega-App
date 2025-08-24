@@ -171,40 +171,50 @@ button:active {
     transform: scale(0.95);
 }
 
+.fecha-impresion {
+    display: none;
+}
+
 /* Imprimir Etiqueta */
 
 @media print {
-
     @page {
-        size: 152mm 100mm;
+        size: 152mm 140mm;
         margin: 0;
     }
 
     .container {
-        margin: 0;
-        padding-top: 0;
-        padding-left: 6%;
-        padding-bottom: 6%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100mm;
+        display: block;
         width: 152mm;
     }
 
     .etiqueta {
-        width: 152mm;
+        box-sizing: border-box;
+        width: 150mm;
+        height: 99mm;
+        margin: 0 auto;
         text-align: center;
         page-break-inside: avoid;
     }
 
-    .referencia, h1 {
-        padding: 0;
-        margin: 0;
+    .etiqueta:last-child {
+        page-break-after: auto;
     }
 
     .referencia,
+    h1,
     button {
-        visibility: hidden;
+        display: none !important;
+    }
+
+    .fecha-impresion {
+        display: block;
+        position: absolute;
+        bottom: -0.26mm;
+        font-size: 11px;
+        color: #444;
+        text-align: right;
+        margin-top: 15px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 }

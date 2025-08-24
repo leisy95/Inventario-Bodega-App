@@ -39,13 +39,20 @@ namespace InventarioBackend.Models
         [StringLength(20)]
         public string ImpresoNo { get; set; }
 
+        [Column(TypeName = "decimal(10,2)")]
         public decimal Ancho { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
         public decimal Alto { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
         public decimal Calibre { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal Peso { get; set; } = 0; 
 
-        public int Cantidad { get; set; } = 0; 
+        public int Cantidad { get; set; } = 0;
+
+        public string ReferenciaNormalizada { get; set; }
     }
 }

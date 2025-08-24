@@ -14,14 +14,36 @@ export class MostrarVistaComponent implements OnInit {
   referenciasFiltradas!: Observable<string[]>;
   pesoIngresado: number | null = null;
   inventario: Inventario | null = null;
-
   pesoActual: number | null = null;
+  fechaImpresion: Date = new Date();
 
   constructor(private inventarioService: InventarioService) { }
 
   ngOnInit(): void {
     // Trae todas las referencias al inicio
     this.filtrarReferencias();
+    this.configurarEventoImpresion();
+  }
+
+  ngOnDestroy(): void {
+    this.removerEventoImpresion(); // 
+  }
+
+  //Fecha de Impresion
+  actualizarFechaImpresion(): void {
+    this.fechaImpresion = new Date();
+  }
+
+  private beforePrintListener = () => {
+    this.actualizarFechaImpresion();
+  };
+
+  private configurarEventoImpresion(): void {
+    window.addEventListener('beforeprint', this.beforePrintListener);
+  }
+
+  private removerEventoImpresion(): void {
+    window.removeEventListener('beforeprint', this.beforePrintListener);
   }
 
   filtrarReferencias() {
@@ -79,7 +101,13 @@ export class MostrarVistaComponent implements OnInit {
     }
   }
 
+  /* Imprimir etiqueta */
   imprimirEtiqueta() {
+    this.actualizarFechaImpresion();
     window.print();
+  }
+
+  getReferenciaParaBarcode(): string {
+    return this.inventario?.referencia?.replace(/[^A-Za-z0-9]/g, '') || '';
   }
 }
