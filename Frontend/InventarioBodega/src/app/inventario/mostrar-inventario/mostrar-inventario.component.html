@@ -1,0 +1,83 @@
+<div class="contenedor">
+    <h2>Inventario</h2>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="referencia">
+            <th mat-header-cell *matHeaderCellDef>Referencia</th>
+            <td mat-cell *matCellDef="let item">{{ item.referencia }}</td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef>Descripción</th>
+            <td mat-cell *matCellDef="let item">{{ item.descripcion }}</td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="tipoBolsa">
+            <th mat-header-cell *matHeaderCellDef>Tipo de bolsa</th>
+            <td mat-cell *matCellDef="let item">{{ item.tipoBolsa }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipoMaterial">
+            <th mat-header-cell *matHeaderCellDef>Tipo de Material</th>
+            <td mat-cell *matCellDef="let item">{{ item.tipoMaterial }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="densidad">
+            <th mat-header-cell *matHeaderCellDef>Densidad</th>
+            <td mat-cell *matCellDef="let item">{{ item.densidad }}</td>
+        </ng-container>
+
+         <ng-container matColumnDef="color">
+            <th mat-header-cell *matHeaderCellDef>Color</th>
+            <td mat-cell *matCellDef="let item">{{ item.color }}</td>
+        </ng-container>
+
+         <ng-container matColumnDef="segundoColor">
+            <th mat-header-cell *matHeaderCellDef>Segundo Color</th>
+            <td mat-cell *matCellDef="let item">{{ item.segundoColor }}</td>
+        </ng-container>
+
+         <ng-container matColumnDef="impresoNo">
+            <th mat-header-cell *matHeaderCellDef>Impresion - No</th>
+            <td mat-cell *matCellDef="let item">{{ item.impresoNo }}</td>
+        </ng-container>
+
+         <ng-container matColumnDef="ancho">
+            <th mat-header-cell *matHeaderCellDef>Ancho</th>
+            <td mat-cell *matCellDef="let item">{{ item.ancho }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="alto">
+            <th mat-header-cell *matHeaderCellDef>Alto</th>
+            <td mat-cell *matCellDef="let item">{{ item.alto }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="calibre">
+            <th mat-header-cell *matHeaderCellDef>Calibre</th>
+            <td mat-cell *matCellDef="let item">{{ item.calibre }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="peso">
+            <th mat-header-cell *matHeaderCellDef>Peso</th>
+            <td mat-cell *matCellDef="let item">{{ item.peso }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="cantidad">
+            <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+            <td mat-cell *matCellDef="let item">{{ item.cantidad }}</td>
+        </ng-container>
+
+        <!-- Acciones -->
+        <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let item">
+                <button mat-raised-button color="primary" (click)="editarInventario(item)">Editar</button>
+                <button mat-raised-button color="warn" (click)="eliminarInventario(item.id)">Eliminar</button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+</div>

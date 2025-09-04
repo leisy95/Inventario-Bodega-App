@@ -3,6 +3,8 @@ using InventarioBackend.DTOs;
 using InventarioBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RegistrarItemRequest = InventarioBackend.DTOs.RegistrarItemRequest;
+using RegistrarItemResponse = InventarioBackend.DTOs.RegistrarItemResponse;
 
 namespace InventarioBackend.Controllers
 {
@@ -76,6 +78,67 @@ namespace InventarioBackend.Controllers
             };
 
             return Ok(response);
+        }
+
+        [HttpPost("registrar-item")]
+        public async Task<ActionResult<RegistrarItemResponse>> RegistrarItem([FromBody] RegistrarItemRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var inventario = new Inventario
+                {
+                    Referencia = request.Referencia,
+                    Descripcion = request.Descripcion,
+                    TipoBolsa = request.TipoBolsa,
+                    TipoMaterial = request.TipoMaterial,
+                    Densidad = request.Densidad,
+                    Color = request.Color,
+                    SegundoColor = request.SegundoColor,
+                    ImpresoNo = request.ImpresoNo,
+                    Ancho = request.Ancho ?? 0,
+                    Alto = request.Alto ?? 0,
+                    Calibre = request.Calibre ?? 0,
+
+                    // 🚨 Siempre inicializados en 0 aquí
+                    Peso = 0,
+                    Cantidad = 0,
+
+                    ReferenciaNormalizada = request.Referencia?
+                           .Replace(".", "")
+                           .Replace("*", "")
+                           .ToUpper()
+                };
+
+                _context.Inventarios.Add(inventario);
+                await _context.SaveChangesAsync();
+
+                // También insertamos el InventarioItem asociado
+                var inventarioItem = new InventarioItem
+                {
+                    IdInventario = inventario.Id,
+                    FechaRegistroItem = DateTime.UtcNow,
+                    Estado = "REGISTRADO",
+                    PesoActual = 0
+                };
+
+                _context.InventarioItems.Add(inventarioItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new RegistrarItemResponse
+                {
+                    IdItemGenerado = inventarioItem.Id,
+                    Referencia = inventario.Referencia,
+                    Message = "Item registrado correctamente"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Error interno", Error = ex.Message });
+            }
+
         }
 
         // PUT: api/inventario/5

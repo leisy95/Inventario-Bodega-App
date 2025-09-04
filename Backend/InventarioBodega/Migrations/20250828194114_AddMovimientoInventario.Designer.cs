@@ -4,6 +4,7 @@ using InventarioBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250828194114_AddMovimientoInventario")]
+    partial class AddMovimientoInventario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,9 +123,14 @@ namespace InventarioBackend.Migrations
                     b.Property<decimal>("PesoActual")
                         .HasColumnType("decimal(18, 2)");
 
+                    b.Property<int?>("TipoProductoIdTipo")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IdInventario");
+
+                    b.HasIndex("TipoProductoIdTipo");
 
                     b.ToTable("InventarioItems");
                 });
@@ -160,6 +168,72 @@ namespace InventarioBackend.Migrations
                     b.ToTable("MovimientosInventario");
                 });
 
+            modelBuilder.Entity("InventarioBackend.Models.TipoProducto", b =>
+                {
+                    b.Property<int>("IdTipo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTipo"));
+
+                    b.Property<decimal>("Alto")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("Ancho")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("Calibre")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Densidad")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ImpresoNo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Impreso/No");
+
+                    b.Property<string>("Referencia")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SegundoColor")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Segundo color");
+
+                    b.Property<string>("TipoBolsa")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("Tipo de Bolsa");
+
+                    b.Property<string>("TipoMaterial")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("Tipo Material");
+
+                    b.HasKey("IdTipo");
+
+                    b.ToTable("TiposProducto");
+                });
+
             modelBuilder.Entity("InventarioBackend.Models.InventarioItem", b =>
                 {
                     b.HasOne("InventarioBackend.Models.Inventario", "Inventario")
@@ -167,6 +241,10 @@ namespace InventarioBackend.Migrations
                         .HasForeignKey("IdInventario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("InventarioBackend.Models.TipoProducto", null)
+                        .WithMany("InventarioItems")
+                        .HasForeignKey("TipoProductoIdTipo");
 
                     b.Navigation("Inventario");
                 });
@@ -190,6 +268,11 @@ namespace InventarioBackend.Migrations
             modelBuilder.Entity("InventarioBackend.Models.InventarioItem", b =>
                 {
                     b.Navigation("Movimientos");
+                });
+
+            modelBuilder.Entity("InventarioBackend.Models.TipoProducto", b =>
+                {
+                    b.Navigation("InventarioItems");
                 });
 #pragma warning restore 612, 618
         }

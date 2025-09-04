@@ -11,14 +11,14 @@ namespace InventarioBackend.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required]
-        public int IdTipoProducto { get; set; } // Clave foránea a TipoProducto
+        [ForeignKey("Inventario")]
+        public int IdInventario { get; set; } // Clave foránea a IdInvenatrio
 
-        [ForeignKey("IdTipoProducto")]
-        public TipoProducto TipoProducto { get; set; } // Propiedad de navegación
+        
+        public Inventario Inventario { get; set; } // Propiedad de navegación
 
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal PesoActual { get; set; }
+        public decimal PesoActual { get; set; } = 0;
 
         [Required]
         public DateTime FechaRegistroItem { get; set; }

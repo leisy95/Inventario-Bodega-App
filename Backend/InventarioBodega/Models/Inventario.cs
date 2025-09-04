@@ -54,5 +54,7 @@ namespace InventarioBackend.Models
         public int Cantidad { get; set; } = 0;
 
         public string ReferenciaNormalizada { get; set; }
+
+        public ICollection<InventarioItem> InventarioItems { get; set; } = new List<InventarioItem>();
     }
 }

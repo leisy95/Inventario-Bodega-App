@@ -1,131 +1,90 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-
-interface TipoProducto {
-  idTipo: number;
-  referencia: string;
-  color?: string;
-  medida?: string;
-  unidadPeso?: string;
-  peso?: number;
-  ancho?: number;
-  largo?: number;
-  calibre?: number;
-  material?: string;
-  mezcla?: string;
-  toquel?: string;
-}
+import { Component } from '@angular/core';
+import { InventarioService, Inventario } from '../../services/inventario.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registrar-producto',
   templateUrl: './registrar-producto.component.html',
   styleUrls: ['./registrar-producto.component.css']
 })
-export class RegistrarProductoComponent implements OnInit {
+export class RegistrarProductoComponent {
 
-  // --- Campos para registro ---
-  referenciaTipo: string = '';
-  color: string = '';
-  medida: string = '';
-  unidadPeso: string = 'kg';
-  peso: number | null = null;
-  ancho: string = '';
-  largo: string = '';
-  calibre: string = '';
-  material: string = '';
-  mezcla: string = '';
-  toquel: string = '';
+  loading = false;
 
-  // --- Estados para registro ---
-  generatedItemId: number | null = null;
-  barcodeImageUrl: string = '';
-  loading: boolean = false;
-  message: string = '';
+  producto: Inventario = {
+    id: 0,
+    referencia: '',
+    descripcion: '',
+    tipoDeBolsa: '',
+    tipoMaterial: '',
+    densidad: '',
+    color: '',
+    segundoColor: '',
+    impresoNo: '',
+    ancho: 0,
+    alto: 0,
+    calibre: 0,
+    peso: 0
+  };
 
-  // --- Para mostrar datos ---
-  tiposProducto: TipoProducto[] = [];
-  loadingTipos = false;
-  errorTipos: string | null = null;
+  constructor(
+    private inventarioService: InventarioService,
+    private toastr: ToastrService
+  ) {}
 
-  private readonly API_BASE_URL = 'http://localhost:5244/api/Inventario';
-
-  constructor(private http: HttpClient, private router: Router) { }
-
-  ngOnInit(): void {
-    // Puedes cargar datos automáticamente aquí si quieres
-  }
-
-  generateBarcodeImage(id: number): string {
-    return `https://placehold.co/300x100/000/fff?text=ID:${id}`;
-  }
-
-  async handleRegisterItem(): Promise<void> {
-    if (!this.referenciaTipo || !this.unidadPeso) {
-      this.message = 'Por favor, complete la Referencia (Tipo) y la Unidad de Peso.';
+  handleRegisterItem() {
+    if (!this.producto.referencia) {
+      this.toastr.error('La referencia es obligatoria', 'Error');
       return;
     }
 
     this.loading = true;
-    this.message = '';
-    this.generatedItemId = null;
-    this.barcodeImageUrl = '';
 
-    const requestBody = {
-      referenciaTipo: this.referenciaTipo,
-      color: this.color,
-      medida: this.medida,
-      unidadPeso: this.unidadPeso,
-      peso: this.peso,
-      ancho: this.ancho,
-      largo: this.largo,
-      calibre: this.calibre,
-      material: this.material,
-      mezcla: this.mezcla,
-      toquel: this.toquel
-    };
+    const payload = {
+    Referencia: this.producto.referencia,
+    Descripcion: this.producto.descripcion,
+    TipoBolsa: this.producto.tipoDeBolsa,
+    TipoMaterial: this.producto.tipoMaterial,
+    ImpresoNo: this.producto.impresoNo,
+    Ancho: this.producto.ancho,
+    Alto: this.producto.alto,
+    Calibre: this.producto.calibre,
+    Color: this.producto.color,
+    SegundoColor: this.producto.segundoColor,
+    Densidad: this.producto.densidad
+  };
 
-    try {
-      const data: any = await this.http.post(`${this.API_BASE_URL}/registrar-item`, requestBody).toPromise();
-
-      this.generatedItemId = data.idItemGenerado;
-      this.barcodeImageUrl = this.generateBarcodeImage(data.idItemGenerado);
-      this.message = `¡Éxito! Item ID ${data.idItemGenerado} generado para la referencia ${data.referenciaTipo}.`;
-
-      this.referenciaTipo = '';
-      this.color = '';
-      this.medida = '';
-      this.unidadPeso = 'kg';
-      this.ancho = '';
-      this.largo = '';
-      this.calibre = '';
-      this.material = '';
-      this.mezcla = '';
-      this.toquel = '';
-
-    } catch (error: any) {
-      console.error('Error de red o al procesar la solicitud:', error);
-      if (error.error && error.error.message) {
-        this.message = `Error: ${error.error.message}`;
-      } else {
-        this.message = 'Ocurrió un error de conexión. Asegúrese de que el backend esté funcionando y el puerto sea correcto.';
+    console.log("Payload backend", payload);
+    this.inventarioService.addInventario(payload).subscribe({
+      next: () => {
+        this.toastr.success('Producto registrado con éxito', 'Éxito');
+        this.resetForm();
+      },
+      error: (err) => {
+        console.error('Error al registrar producto:', err);
+        this.toastr.error('Error al registrar el producto', 'Error');
+      },
+      complete: () => {
+        this.loading = false;
       }
-    } finally {
-      this.loading = false;
-    }
+    });
   }
 
-  handlePrintTicket(): void {
-    if (!this.generatedItemId) {
-      this.message = 'Primero debe generar un item para poder imprimir el tiquete.';
-      return;
-    }
-    window.print();
-    this.message = 'Se ha enviado la solicitud de impresión al navegador. Ajuste la configuración de la página para el tamaño del tiquete.';
-  }
-
-  // --- NUEVO: función para mostrar la lista de tipos de producto ---
-   irMostrarVista() {
-    this.router.navigate(['/mostrar-vista']);
+  resetForm() {
+    this.producto = {
+      id: 0,
+      referencia: '',
+      descripcion: '',
+      tipoDeBolsa: '',
+      tipoMaterial: '',
+      densidad: '',
+      color: '',
+      segundoColor: '',
+      impresoNo: '',
+      ancho: 0,
+      alto: 0,
+      calibre: 0,
+      peso: 0
+    };
   }
 }

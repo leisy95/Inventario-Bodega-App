@@ -11,21 +11,36 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core'
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { MostrarInventarioComponent } from './mostrar-inventario/mostrar-inventario.component';
+
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+
 @NgModule({
   declarations: [
     RegistrarProductoComponent,
     MostrarVistaComponent,
+    MostrarInventarioComponent
   ],
   imports: [
     CommonModule,
-     FormsModule,
-     // Angular material
+    FormsModule,
+    // Angular material
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
     MatOptionModule,
-    NgxBarcode6Module
+    NgxBarcode6Module,
+    BrowserAnimationsModule,  
+    ToastrModule.forRoot(),
+
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ]
 })
 export class InventarioModule { }

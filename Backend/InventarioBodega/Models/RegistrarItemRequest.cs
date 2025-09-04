@@ -6,7 +6,7 @@ namespace InventarioBackend.Models
     public class RegistrarItemRequest
     {
         [Required]
-        public string ReferenciaTipo { get; set; } = string.Empty;
+        public string Referencia { get; set; } = string.Empty;
         public string? Color { get; set; }
         public string? Medida { get; set; }
         [Required]
@@ -27,7 +27,7 @@ namespace InventarioBackend.Models
     public class RegistrarItemResponse
     {
         public int IdItemGenerado { get; set; }
-        public string ReferenciaTipo { get; set; } = string.Empty;
+        public string Referencia { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
     }
 }

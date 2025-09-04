@@ -1,0 +1,37 @@
+.contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.loading {
+    font-size: 18px;
+    color: #555;
+    margin-top: 20px;
+}
+
+.tabla-inventario th {
+    background: #0056b3;
+    color: #fff;
+    padding: 10px;
+}
+
+.tabla-inventario td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla-inventario tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.tabla-inventario tr:hover {
+    background-color: #e6f7ff;
+}

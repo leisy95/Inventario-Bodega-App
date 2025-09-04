@@ -97,7 +97,7 @@ export class MostrarVistaComponent implements OnInit {
         error: (err) => console.error(err)
       });
     } else {
-      console.warn("⚠ No hay referencia seleccionada, no se guarda en BD");
+      console.warn("No hay referencia seleccionada, no se guarda en BD");
     }
   }
 

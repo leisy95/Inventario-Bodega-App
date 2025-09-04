@@ -29,6 +29,21 @@ export interface Inventario {
     paqueteNumero?: number;
     paqueteCantidad?: number;
 }
+
+export interface RegistrarItemRequest {
+    Referencia: string;
+    Descripcion: string;
+    TipoBolsa?: string;
+    TipoMaterial?: string;
+    ImpresoNo: string;
+    Ancho?: number;
+    Alto?: number;
+    Calibre?: number;
+    Color: string;
+    SegundoColor?: string;
+    Densidad?: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -58,17 +73,17 @@ export class InventarioService {
     }
 
     // Crear un nuevo inventario
-    addInventario(item: Inventario): Observable<Inventario> {
-        return this.http.post<Inventario>(this.apiUrl, item);
+    addInventario(payload: RegistrarItemRequest): Observable<any> {
+        return this.http.post<any>(`${this.apiUrl}/registrar-item`, payload);
     }
 
-    // Actualizar un inventario
-    updateInventario(id: number, item: Inventario): Observable<void> {
-        return this.http.put<void>(`${this.apiUrl}/${id}`, item);
+    // eliminar un inventario
+    deleteInventario(id: number) {
+        return this.http.delete(`${this.apiUrl}/${id}`);
     }
 
-    // Eliminar un inventario
-    deleteInventario(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    //Actualizar un inentario
+    updateInventario(id: number, inventario: Inventario) {
+        return this.http.put(`${this.apiUrl}/${id}`, inventario);
     }
 }

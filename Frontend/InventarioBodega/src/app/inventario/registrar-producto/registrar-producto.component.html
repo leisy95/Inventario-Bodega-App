@@ -1,107 +1,84 @@
-<div class="container-fluid">
+<div class="form-container">
   <div class="card">
-    <h2 class="card-title">Registro de Tipo de Producto y Generación de Item</h2>
+    <h2 class="card-title">Registro de Tipo de Producto</h2>
 
-    <!-- Mensajes para el usuario -->
-    <div *ngIf="message"
-      [ngClass]="{'alert-success': message.includes('Éxito'), 'alert-danger': !message.includes('Éxito')}"
-      class="alert" role="alert">
-      {{ message }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    <!-- Formulario -->
+    <form (ngSubmit)="handleRegisterItem()" #form="ngForm">
 
-    <!-- Formulario de entrada -->
-    <div class="row">
-      <div>
-        <label htmlFor="referenciaTipo" class="form-label">Referencia (Tipo):</label>
-        <input type="text" id="referenciaTipo" class="form-control" [(ngModel)]="referenciaTipo"
-          placeholder="Ej. CAMISA_AZUL_M" [disabled]="loading" />
-      </div>
-      <div>
-        <label htmlFor="color" class="form-label">Color:</label>
-        <input type="text" id="color" class="form-control" [(ngModel)]="color" placeholder="Ej. Rojo"
-          [disabled]="loading" />
-      </div>
-      <div>
-        <label htmlFor="medida" class="form-label">Medida:</label>
-        <input type="text" id="medida" class="form-control" [(ngModel)]="medida" placeholder="Ej. Grande"
-          [disabled]="loading" />
-      </div>
-      <div>
-        <label htmlFor="unidadPeso" class="form-label">Unidad de Peso:</label>
-        <select id="unidadPeso" class="form-select rounded-pill" [(ngModel)]="unidadPeso" [disabled]="loading">
-          <option value="kg">kg</option>
-          <option value="gr">gr</option>
-          <option value="lb">lb</option>
-          <option value="oz">oz</option>
-        </select>
-      </div>
-      <div>
-        <label for="peso" class="form-label">Peso:</label>
-        <input type="number" id="peso" class="form-control" [(ngModel)]="peso" placeholder="Ej. 12.5"
-          [disabled]="loading" />
-      </div>
-      <!-- Nuevos campos para el tiquete -->
-      <div class="col-md-6">
-        <label htmlFor="ancho" class="form-label">Ancho:</label>
-        <input type="text" id="ancho" class="form-control" [(ngModel)]="ancho" placeholder="Ej. 10 cm"
-          [disabled]="loading" />
-      </div>
-      <div>
-        <label htmlFor="largo" class="form-label">Largo:</label>
-        <input type="text" id="largo" class="form-control" [(ngModel)]="largo" placeholder="Ej. 20 cm"
-          [disabled]="loading" />
-      </div>
-      <div >
-        <label htmlFor="calibre" class="form-label">Calibre:</label>
-        <input type="text" id="calibre" class="form-control" [(ngModel)]="calibre" placeholder="Ej. 0.5 mm"
-          [disabled]="loading" />
-      </div>
-      <div >
-        <label htmlFor="material" class="form-label">Material:</label>
-        <input type="text" id="material" class="form-control" [(ngModel)]="material"
-          placeholder="Ej. Algodón" [disabled]="loading" />
-      </div>
-      <div>
-        <label htmlFor="mezcla" class="form-label">Mezcla:</label>
-        <input type="text" id="mezcla" class="form-control" [(ngModel)]="mezcla"
-          placeholder="Ej. 80% Algodón, 20% Poliéster" [disabled]="loading" />
-      </div>
-      <div>
-        <label htmlFor="toquel" class="form-label">Toquel:</label>
-        <input type="text" id="toquel" class="form-control" [(ngModel)]="toquel" placeholder="Ej. Suave"
-          [disabled]="loading" />
-      </div>
-    </div>
-
-    Botones de acción
-    <div class="">
-      <button (click)="handleRegisterItem()"
-        class=""
-        [disabled]="loading">
-        <span>{{ loading ? 'Procesando...' : 'Registrar Tipo y Generar Item' }}</span>
-      </button>
-
-      <button (click)="handlePrintTicket()"
-        class=""
-        [disabled]="!generatedItemId || loading">
-        <span>Imprimir Tiquete</span>
-      </button>
-    </div>
-
-    Área de resultados
-    <div *ngIf="generatedItemId" class="card bg-info bg-opacity-10 border-info text-center p-3">
-      <div class="card-body">
-        <h3 class="card-title">Item Generado Exitosamente:</h3>
-        <p class="card-text">ID de Item: {{ generatedItemId }}</p>
-        <div *ngIf="barcodeImageUrl" class="d-flex">
-          <img [src]="barcodeImageUrl" alt="Código de barras para ID: {{ generatedItemId }}"
-            class="img-fluid rounded" />
+      <div class="form-grid">
+        <!-- Referencia -->
+        <div class="form-group">
+          <label for="referencia">Referencia *</label>
+          <input type="text" id="referencia" name="referencia" [(ngModel)]="producto.referencia" placeholder="Ej.1R0BL9009.0*000.0*4.00" required>
         </div>
-        <p class="text-muted">Este ID ({{ generatedItemId }}) es el que iría en el código de barras del tiquete.
-        </p>
+
+        <!-- Descripción -->
+        <div class="form-group">
+          <label for="descripcion">Descripción</label>
+          <input type="text" id="descripcion" name="descripcion" [(ngModel)]="producto.descripcion" placeholder="Descripcion">
+        </div>
+
+        <!-- Tipo de Bolsa -->
+        <div class="form-group">
+          <label for="tipoDeBolsa">Tipo de Bolsa</label>
+          <input type="text" id="tipoDeBolsa" name="tipoDeBolsa" [(ngModel)]="producto.tipoDeBolsa" placeholder="Tipo bolsa">
+        </div>
+
+        <!-- Tipo de Material -->
+        <div class="form-group">
+          <label for="tipoMaterial">Tipo de Material</label>
+          <input type="text" id="tipoMaterial" name="tipoMaterial" [(ngModel)]="producto.tipoMaterial" placeholder=" Material">
+        </div>
+
+        <!-- Densidad -->
+        <div class="form-group">
+          <label for="densidad">Densidad</label>
+          <input type="text" id="densidad" name="densidad" [(ngModel)]="producto.densidad" placeholder="Densidad">
+        </div>
+
+        <!-- Color -->
+        <div class="form-group">
+          <label for="color">Color</label>
+          <input type="text" id="color" name="color" [(ngModel)]="producto.color" placeholder="Color">
+        </div>
+
+        <!-- Segundo Color -->
+        <div class="form-group">
+          <label for="segundoColor">Segundo Color</label>
+          <input type="text" id="segundoColor" name="segundoColor" [(ngModel)]="producto.segundoColor" placeholder="Color">
+        </div>
+
+        <!-- Impreso/No -->
+        <div class="form-group">
+          <label for="impresoNo">Impreso / No</label>
+          <input type="text" id="impresoNo" name="impresoNo" [(ngModel)]="producto.impresoNo" placeholder="Impreso - No">
+        </div>
+
+        <!-- Ancho -->
+        <div class="form-group">
+          <label for="ancho">Ancho</label>
+          <input type="number" id="ancho" name="ancho" [(ngModel)]="producto.ancho" placeholder="Ej: 12.5">
+        </div>
+
+        <!-- Alto -->
+        <div class="form-group">
+          <label for="alto">Alto</label>
+          <input type="number" id="alto" name="alto" [(ngModel)]="producto.alto" placeholder="Ej: 12.5">
+        </div>
+
+        <!-- Calibre -->
+        <div class="form-group">
+          <label for="calibre">Calibre</label>
+          <input type="number" id="calibre" name="calibre" [(ngModel)]="producto.calibre" placeholder="Ej: 2.7">
+        </div>
       </div>
-    </div>
+
+      <!-- Botón centrado -->
+      <div class="form-actions">
+        <button type="submit" [disabled]="loading || form.invalid">
+          {{ loading ? 'Registrando...' : 'Registrar Producto' }}
+        </button>
+      </div>
+    </form>
   </div>
-  <button (click)="irMostrarVista()">Mostrar vista</button>
 </div>
