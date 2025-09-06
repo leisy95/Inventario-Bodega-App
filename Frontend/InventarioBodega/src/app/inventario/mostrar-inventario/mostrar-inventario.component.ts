@@ -3,6 +3,7 @@ import { InventarioService, Inventario } from '../../services/inventario.service
 import { ToastrService } from 'ngx-toastr';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-mostrar-inventario',
@@ -10,12 +11,15 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./mostrar-inventario.component.css']
 })
 export class MostrarInventarioComponent implements OnInit {
-  displayedColumns: string[] = ['referencia', 'tipoBolsa', 'tipoMaterial',
-     'densidad', 'color', 'segundoColor', 'impresoNo', 'ancho', 'alto', 'calibre', 'peso',
-      'cantidad', 'acciones'];
+  displayedColumns: string[] = [
+    'referencia', 'tipoBolsa', 'tipoMaterial', 'densidad', 'color',
+    'segundoColor', 'impresoNo', 'ancho', 'alto', 'calibre', 'peso',
+    'cantidad', 'acciones'
+  ];
   dataSource = new MatTableDataSource<Inventario>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private inventarioService: InventarioService,
@@ -27,9 +31,19 @@ export class MostrarInventarioComponent implements OnInit {
       next: (data) => {
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       error: () => this.toastr.error('Error al cargar inventario', 'Error')
     });
+  }
+
+  aplicarFiltro(event: Event) {
+    const valor = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = valor.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   eliminarInventario(id: number) {

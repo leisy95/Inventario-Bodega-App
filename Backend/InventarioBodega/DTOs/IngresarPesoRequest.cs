@@ -14,6 +14,7 @@ namespace InventarioBackend.DTOs
     public class IngresarPesoResponse
     {
         public string Referencia { get; set; }
+        public string ReferenciaPeso { get; set; }
         public decimal Peso { get; set; }
         public int Cantidad { get; set; }
         public string Descripcion { get; set; }

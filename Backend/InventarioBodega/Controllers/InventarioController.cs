@@ -48,6 +48,7 @@ namespace InventarioBackend.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            // Normalizar la referencia
             var refNormalizada = input.Referencia.Replace(".", "").Replace("*", "");
 
             var producto = await _context.Inventarios
@@ -55,6 +56,22 @@ namespace InventarioBackend.Controllers
 
             if (producto == null)
                 return NotFound("Referencia no encontrada");
+
+            // Generar nueva referencia con peso individual
+            var pesoFormateado = input.Peso.ToString("0.##").Replace(".", "").Replace(",", "");
+            var referenciaConPeso = $"{producto.ReferenciaNormalizada}{pesoFormateado}";
+
+            // Crear un nuevo InventarioItem siempre
+            var nuevoItem = new InventarioItem
+            {
+                IdInventario = producto.Id,
+                PesoActual = input.Peso,
+                FechaRegistroItem = DateTime.Now,
+                Estado = "INGRESADO",
+                ReferenciaPeso = referenciaConPeso
+            };
+
+            _context.InventarioItems.Add(nuevoItem);
 
             // Sumar peso y cantidad
             producto.Peso += input.Peso;
@@ -67,6 +84,7 @@ namespace InventarioBackend.Controllers
             var response = new IngresarPesoResponse
             {
                 Referencia = producto.Referencia,
+                ReferenciaPeso = nuevoItem.ReferenciaPeso,
                 Peso = producto.Peso,
                 Cantidad = producto.Cantidad,
                 Descripcion = producto.Descripcion,
@@ -102,7 +120,7 @@ namespace InventarioBackend.Controllers
                     Alto = request.Alto ?? 0,
                     Calibre = request.Calibre ?? 0,
 
-                    // 🚨 Siempre inicializados en 0 aquí
+                    // Siempre inicializados en 0 aquí
                     Peso = 0,
                     Cantidad = 0,
 
@@ -115,23 +133,11 @@ namespace InventarioBackend.Controllers
                 _context.Inventarios.Add(inventario);
                 await _context.SaveChangesAsync();
 
-                // También insertamos el InventarioItem asociado
-                var inventarioItem = new InventarioItem
-                {
-                    IdInventario = inventario.Id,
-                    FechaRegistroItem = DateTime.UtcNow,
-                    Estado = "REGISTRADO",
-                    PesoActual = 0
-                };
-
-                _context.InventarioItems.Add(inventarioItem);
-                await _context.SaveChangesAsync();
-
                 return Ok(new RegistrarItemResponse
                 {
-                    IdItemGenerado = inventarioItem.Id,
+                    IdItemGenerado = inventario.Id,
                     Referencia = inventario.Referencia,
-                    Message = "Item registrado correctamente"
+                    Message = "Producto registrado correctamente en Inventario"
                 });
             }
             catch (Exception ex)

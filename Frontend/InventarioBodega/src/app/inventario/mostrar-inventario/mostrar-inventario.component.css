@@ -1,37 +1,48 @@
-.contenedor {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px;
+.inventario-container {
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #2c3e50;
+    margin-bottom: 1rem;
+    color: #1e293b;
+    font-weight: 600;
 }
 
-.loading {
-    font-size: 18px;
-    color: #555;
-    margin-top: 20px;
+.search-box {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 1rem;
 }
 
-.tabla-inventario th {
-    background: #0056b3;
-    color: #fff;
-    padding: 10px;
+.tabla-contenedor {
+    width: 100%;
+    min-width: 1000px;
+    overflow-x: auto;
+    border-radius: 8px;
 }
 
-.tabla-inventario td {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
+
+table {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.tabla-inventario tr:nth-child(even) {
-    background-color: #f2f2f2;
+.mat-header-cell {
+    background: #1e293b;
+    color: white;
+    font-weight: bold;
+    white-space: nowrap;
 }
 
-.tabla-inventario tr:hover {
-    background-color: #e6f7ff;
+.mat-cell {
+    color: #334155;
+    white-space: nowrap;
+}
+
+button i {
+    font-size: 16px;
 }

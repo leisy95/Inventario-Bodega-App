@@ -54,7 +54,6 @@ export class RegistrarProductoComponent {
     Densidad: this.producto.densidad
   };
 
-    console.log("Payload backend", payload);
     this.inventarioService.addInventario(payload).subscribe({
       next: () => {
         this.toastr.success('Producto registrado con éxito', 'Éxito');

@@ -1,84 +1,89 @@
-<div class="form-container">
-  <div class="card">
-    <h2 class="card-title">Registro de Tipo de Producto</h2>
+<div class="form-container mat-elevation-z8">
+  <h2 class="card-title">Registro de Tipo de Producto</h2>
 
-    <!-- Formulario -->
-    <form (ngSubmit)="handleRegisterItem()" #form="ngForm">
+  <form (ngSubmit)="handleRegisterItem()" #form="ngForm">
+    <div class="form-grid">
 
-      <div class="form-grid">
-        <!-- Referencia -->
-        <div class="form-group">
-          <label for="referencia">Referencia *</label>
-          <input type="text" id="referencia" name="referencia" [(ngModel)]="producto.referencia" placeholder="Ej.1R0BL9009.0*000.0*4.00" required>
-        </div>
+      <!-- Referencia -->
+      <mat-form-field appearance="outline">
+        <mat-label>Referencia *</mat-label>
+        <input matInput type="text" id="referencia" name="referencia" [(ngModel)]="producto.referencia" required
+          placeholder="Ej: 1R0BL9009.0*000.0*4.00">
+      </mat-form-field>
 
-        <!-- Descripción -->
-        <div class="form-group">
-          <label for="descripcion">Descripción</label>
-          <input type="text" id="descripcion" name="descripcion" [(ngModel)]="producto.descripcion" placeholder="Descripcion">
-        </div>
+      <!-- Descripción -->
+      <mat-form-field appearance="outline">
+        <mat-label>Descripción</mat-label>
+        <input matInput type="text" id="descripcion" name="descripcion" [(ngModel)]="producto.descripcion"
+          placeholder="Descripción">
+      </mat-form-field>
 
-        <!-- Tipo de Bolsa -->
-        <div class="form-group">
-          <label for="tipoDeBolsa">Tipo de Bolsa</label>
-          <input type="text" id="tipoDeBolsa" name="tipoDeBolsa" [(ngModel)]="producto.tipoDeBolsa" placeholder="Tipo bolsa">
-        </div>
+      <!-- Tipo de Bolsa -->
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo de Bolsa</mat-label>
+        <input matInput type="text" id="tipoDeBolsa" name="tipoDeBolsa" [(ngModel)]="producto.tipoDeBolsa"
+          placeholder="Tipo bolsa">
+      </mat-form-field>
 
-        <!-- Tipo de Material -->
-        <div class="form-group">
-          <label for="tipoMaterial">Tipo de Material</label>
-          <input type="text" id="tipoMaterial" name="tipoMaterial" [(ngModel)]="producto.tipoMaterial" placeholder=" Material">
-        </div>
+      <!-- Tipo de Material -->
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo de Material</mat-label>
+        <input matInput type="text" id="tipoMaterial" name="tipoMaterial" [(ngModel)]="producto.tipoMaterial"
+          placeholder="Material">
+      </mat-form-field>
 
-        <!-- Densidad -->
-        <div class="form-group">
-          <label for="densidad">Densidad</label>
-          <input type="text" id="densidad" name="densidad" [(ngModel)]="producto.densidad" placeholder="Densidad">
-        </div>
+      <!-- Densidad -->
+      <mat-form-field appearance="outline">
+        <mat-label>Densidad</mat-label>
+        <input matInput type="text" id="densidad" name="densidad" [(ngModel)]="producto.densidad"
+          placeholder="Densidad">
+      </mat-form-field>
 
-        <!-- Color -->
-        <div class="form-group">
-          <label for="color">Color</label>
-          <input type="text" id="color" name="color" [(ngModel)]="producto.color" placeholder="Color">
-        </div>
+      <!-- Color -->
+      <mat-form-field appearance="outline">
+        <mat-label>Color</mat-label>
+        <input matInput type="text" id="color" name="color" [(ngModel)]="producto.color" placeholder="Color">
+      </mat-form-field>
 
-        <!-- Segundo Color -->
-        <div class="form-group">
-          <label for="segundoColor">Segundo Color</label>
-          <input type="text" id="segundoColor" name="segundoColor" [(ngModel)]="producto.segundoColor" placeholder="Color">
-        </div>
+      <!-- Segundo Color -->
+      <mat-form-field appearance="outline">
+        <mat-label>Segundo Color</mat-label>
+        <input matInput type="text" id="segundoColor" name="segundoColor" [(ngModel)]="producto.segundoColor"
+          placeholder="Color">
+      </mat-form-field>
 
-        <!-- Impreso/No -->
-        <div class="form-group">
-          <label for="impresoNo">Impreso / No</label>
-          <input type="text" id="impresoNo" name="impresoNo" [(ngModel)]="producto.impresoNo" placeholder="Impreso - No">
-        </div>
+      <!-- Impreso / No -->
+      <mat-form-field appearance="outline">
+        <mat-label>Impreso / No</mat-label>
+        <input matInput type="text" id="impresoNo" name="impresoNo" [(ngModel)]="producto.impresoNo"
+          placeholder="Impreso - No">
+      </mat-form-field>
 
-        <!-- Ancho -->
-        <div class="form-group">
-          <label for="ancho">Ancho</label>
-          <input type="number" id="ancho" name="ancho" [(ngModel)]="producto.ancho" placeholder="Ej: 12.5">
-        </div>
+      <!-- Ancho -->
+      <mat-form-field appearance="outline">
+        <mat-label>Ancho</mat-label>
+        <input matInput type="number" id="ancho" name="ancho" [(ngModel)]="producto.ancho" placeholder="Ej: 12.5">
+      </mat-form-field>
 
-        <!-- Alto -->
-        <div class="form-group">
-          <label for="alto">Alto</label>
-          <input type="number" id="alto" name="alto" [(ngModel)]="producto.alto" placeholder="Ej: 12.5">
-        </div>
+      <!-- Alto -->
+      <mat-form-field appearance="outline">
+        <mat-label>Alto</mat-label>
+        <input matInput type="number" id="alto" name="alto" [(ngModel)]="producto.alto" placeholder="Ej: 12.5">
+      </mat-form-field>
 
-        <!-- Calibre -->
-        <div class="form-group">
-          <label for="calibre">Calibre</label>
-          <input type="number" id="calibre" name="calibre" [(ngModel)]="producto.calibre" placeholder="Ej: 2.7">
-        </div>
-      </div>
+      <!-- Calibre -->
+      <mat-form-field appearance="outline">
+        <mat-label>Calibre</mat-label>
+        <input matInput type="number" id="calibre" name="calibre" [(ngModel)]="producto.calibre" placeholder="Ej: 2.7">
+      </mat-form-field>
 
-      <!-- Botón centrado -->
-      <div class="form-actions">
-        <button type="submit" [disabled]="loading || form.invalid">
-          {{ loading ? 'Registrando...' : 'Registrar Producto' }}
-        </button>
-      </div>
-    </form>
-  </div>
+    </div>
+
+    <!-- Botón -->
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="loading || form.invalid">
+        {{ loading ? 'Registrando...' : 'Registrar Producto' }}
+      </button>
+    </div>
+  </form>
 </div>

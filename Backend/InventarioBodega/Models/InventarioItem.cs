@@ -16,6 +16,8 @@ namespace InventarioBackend.Models
 
         
         public Inventario Inventario { get; set; } // Propiedad de navegación
+        [StringLength(200)]
+        public string ReferenciaPeso { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal PesoActual { get; set; } = 0;

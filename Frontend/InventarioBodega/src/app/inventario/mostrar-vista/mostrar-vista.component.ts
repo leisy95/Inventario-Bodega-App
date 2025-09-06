@@ -15,7 +15,9 @@ export class MostrarVistaComponent implements OnInit {
   pesoIngresado: number | null = null;
   inventario: Inventario | null = null;
   pesoActual: number | null = null;
+  pesoMostrado: number | null = null;
   fechaImpresion: Date = new Date();
+  ultimaReferenciaPeso: string | null = null;
 
   constructor(private inventarioService: InventarioService) { }
 
@@ -86,13 +88,16 @@ export class MostrarVistaComponent implements OnInit {
   agregarPeso() {
     const peso = Number(this.pesoIngresado || 0);
     if (!peso) return;
-    this.pesoActual = peso;
 
-    // Guardar en BD
     if (this.referenciaControl.value) {
       this.inventarioService.ingresarPeso(this.referenciaControl.value, peso).subscribe({
-        next: () => {
-          this.pesoActual = peso;
+        next: (response) => {
+          console.log("Respuesta del backend:", response);
+
+          // Guardamos el peso y la referencia con peso que viene del backend
+          this.pesoActual = response.peso;
+          this.ultimaReferenciaPeso = response.referenciaPeso;
+          this.pesoMostrado = peso;
         },
         error: (err) => console.error(err)
       });
@@ -108,6 +113,6 @@ export class MostrarVistaComponent implements OnInit {
   }
 
   getReferenciaParaBarcode(): string {
-    return this.inventario?.referencia?.replace(/[^A-Za-z0-9]/g, '') || '';
+    return this.ultimaReferenciaPeso || '';
   }
 }

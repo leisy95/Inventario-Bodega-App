@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { InventarioModule } from './inventario/inventario.module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -15,11 +16,12 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule, 
     HttpClientModule, 
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    InventarioModule
+    InventarioModule,
   ],
   providers: [
     provideAnimationsAsync()

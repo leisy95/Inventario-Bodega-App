@@ -1,0 +1,50 @@
+<div class="panel-container" [class.collapsed]="isCollapsed">
+
+  <aside class="sidebar">
+
+    <h2 class="menu-title" *ngIf="!isCollapsed">Inventario</h2>
+
+    <!-- Botón de colapsar -->
+    <div class="toggle-btn" (click)="toggleSidebar()">
+      <i class="fas" [ngClass]="isCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+    </div>
+
+    <ul>
+      <li>
+        <a routerLink="mostrar-inventario" routerLinkActive="active">
+          <i class="fas fa-box icon"></i>
+          <span class="text" *ngIf="!isCollapsed">Inventario</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="registrar-producto" routerLinkActive="active">
+          <i class="fas fa-plus icon"></i>
+          <span class="text" *ngIf="!isCollapsed">Registrar</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="mostrar-vista" routerLinkActive="active">
+          <i class="fas fa-eye icon"></i>
+          <span class="text" *ngIf="!isCollapsed">Vista</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="mostrar-entradas" routerLinkActive="active">
+          <i class="fas fa-box-open"></i>
+          <span class="text" *ngIf="!isCollapsed">Entradas</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="registro-entrada" routerLinkActive="active">
+          <i class="fas fa-truck-loading"></i>
+          <span class="text" *ngIf="!isCollapsed">Salidas</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Contenido dinámico -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
