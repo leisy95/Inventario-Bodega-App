@@ -8,7 +8,7 @@ export interface Inventario {
     id: number;
     referencia: string;
     descripcion: string;
-    tipoDeBolsa: string;
+    tipoBolsa: string;
     tipoMaterial: string;
     densidad: string;
     color: string;
@@ -18,6 +18,9 @@ export interface Inventario {
     alto: number;
     calibre: number;
     peso: number;
+    //AQUI EDITE
+    cantidad?: number;
+    referenciaNormalizada?: string;
 
     // Extras opcionales para la vista
     fl?: number;
@@ -48,7 +51,7 @@ export interface RegistrarItemRequest {
     providedIn: 'root'
 })
 export class InventarioService {
-    private apiUrl = 'http://localhost:5244/api/inventario'; // URL de tu backend
+    private apiUrl = 'http://localhost:5244/api/inventario';
 
     constructor(private http: HttpClient) { }
 
@@ -83,7 +86,7 @@ export class InventarioService {
     }
 
     //Actualizar un inentario
-    updateInventario(id: number, inventario: Inventario) {
+    updateInventario(id: number, inventario: any) {
         return this.http.put(`${this.apiUrl}/${id}`, inventario);
     }
 }

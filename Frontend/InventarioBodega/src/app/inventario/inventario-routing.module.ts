@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PanelInventarioComponent } from './components/panel-inventario/panel-inventario.component';
+import { MostrarInventarioComponent } from './components/mostrar-inventario/mostrar-inventario.component';
+import { MostrarVistaComponent } from './components/mostrar-vista/mostrar-vista.component';
+import { RegistrarProductoComponent } from './components/registrar-producto/registrar-producto.component';
+import { MostrarEntradasComponent } from './components/mostrar-entradas/mostrar-entradas.component';
+import { BuscarSalidasComponent } from './components/buscar-salidas/buscar-salidas.component';
 
-import { PanelInventarioComponent } from './panel-inventario/panel-inventario.component';
-import { MostrarInventarioComponent } from './mostrar-inventario/mostrar-inventario.component';
-import { MostrarVistaComponent } from './mostrar-vista/mostrar-vista.component';
-import { RegistrarProductoComponent } from './registrar-producto/registrar-producto.component';
-import { MostrarEntradasComponent } from './mostrar-entradas/mostrar-entradas.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
       { path: 'mostrar-vista', component: MostrarVistaComponent },
       { path: 'registrar-producto', component: RegistrarProductoComponent },
       { path: 'mostrar-entradas', component: MostrarEntradasComponent },
+      { path: 'buscar-salidas', component: BuscarSalidasComponent },
       { path: '', redirectTo: 'mostrar-inventario', pathMatch: 'full' } // uta por defecto
     ]
   }

@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { EditarInventarioComponent } from '../editar-inventario/editar-inventario.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-mostrar-inventario',
@@ -23,10 +25,15 @@ export class MostrarInventarioComponent implements OnInit {
 
   constructor(
     private inventarioService: InventarioService,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
+    this.cargarInventario();
+  }
+
+  cargarInventario() {
     this.inventarioService.getInventarios().subscribe({
       next: (data) => {
         this.dataSource.data = data;
@@ -44,6 +51,22 @@ export class MostrarInventarioComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  editarInventario(item: Inventario) {
+    (document.activeElement as HTMLElement)?.blur();
+
+    const dialogRef = this.dialog.open(EditarInventarioComponent, {
+      width: '600px',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result === true) {
+        this.toastr.success('Inventario actualizado', 'Éxito');
+        this.cargarInventario();
+      }
+    });
   }
 
   eliminarInventario(id: number) {

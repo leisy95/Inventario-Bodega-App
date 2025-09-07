@@ -11,9 +11,9 @@ export class InventarioItemService {
 
   constructor(private http: HttpClient) { }
 
-  // Obtener todas las entradas
+  // Obtener todas las entradas inventarioItem
   getEntradas(): Observable<InventarioItem[]> {
-    return this.http.get<InventarioItem[]>(this.apiUrl);
+    return this.http.get<InventarioItem[]>(`${this.apiUrl}/all-items`);
   }
 
   // Obtener entradas por IdInventario
@@ -21,17 +21,22 @@ export class InventarioItemService {
     return this.http.get<InventarioItem[]>(`${this.apiUrl}/by-inventario/${idInventario}`);
   }
 
+  // Buscar entradas por referenciaPeso
+  getByReferencia(referencia: string) {
+    return this.http.get<InventarioItem[]>(`${this.apiUrl}/by-referencia/${referencia}`);
+  }
+
   // Registrar nueva entrada
   addEntrada(item: Partial<InventarioItem>): Observable<any> {
     return this.http.post<any>(this.apiUrl, item);
   }
 
-  // Actualizar entrada
-  updateEntrada(id: number, item: InventarioItem): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, item);
+  // Actualizar entrada solo peso
+  updatePesoEntrada(id: number, pesoActual: number) {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, { pesoActual });
   }
 
-  // Eliminar entrada
+  // Eliminar entrada de inventarioIten
   deleteEntrada(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }

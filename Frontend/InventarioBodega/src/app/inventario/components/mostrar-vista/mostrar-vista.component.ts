@@ -92,8 +92,6 @@ export class MostrarVistaComponent implements OnInit {
     if (this.referenciaControl.value) {
       this.inventarioService.ingresarPeso(this.referenciaControl.value, peso).subscribe({
         next: (response) => {
-          console.log("Respuesta del backend:", response);
-
           // Guardamos el peso y la referencia con peso que viene del backend
           this.pesoActual = response.peso;
           this.ultimaReferenciaPeso = response.referenciaPeso;

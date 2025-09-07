@@ -147,14 +147,11 @@ namespace InventarioBackend.Controllers
 
         }
 
-        // PUT: api/inventario/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInventario(int id, Inventario inventario)
+        public async Task<IActionResult> EditarInventario(int id, Inventario inventario)
         {
             if (id != inventario.Id)
-            {
-                return BadRequest();
-            }
+                return BadRequest(new { mensaje = "El ID no coincide" });
 
             _context.Entry(inventario).State = EntityState.Modified;
 
@@ -165,13 +162,13 @@ namespace InventarioBackend.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!_context.Inventarios.Any(e => e.Id == id))
-                {
-                    return NotFound();
-                }
+                    return NotFound(new { mensaje = "Inventario no encontrado" });
                 else
-                {
                     throw;
-                }
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al actualizar el inventario", detalle = ex.Message });
             }
 
             return NoContent();

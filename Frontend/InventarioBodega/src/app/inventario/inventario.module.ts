@@ -16,14 +16,20 @@ import { MatSortModule } from '@angular/material/sort';
 import { NgxBarcode6Module } from 'ngx-barcode6';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { RegistrarProductoComponent } from './components/registrar-producto/registrar-producto.component';
+import { MostrarVistaComponent } from './components/mostrar-vista/mostrar-vista.component';
+import { MostrarInventarioComponent } from './components/mostrar-inventario/mostrar-inventario.component';
+import { PanelInventarioComponent } from './components/panel-inventario/panel-inventario.component';
+import { MostrarEntradasComponent } from './components/mostrar-entradas/mostrar-entradas.component';
+import { InventarioRoutingModule } from './inventario-routing.module';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { ConfirmDialogComponent } from './components/shared/confirm-dialog/confirm-dialog.component';
+import { EditarInventarioComponent } from './components/editar-inventario/editar-inventario.component';
+import { EditarEntradaPesoComponent } from './components/editar-entrada-peso/editar-entrada-peso.component';
+import { BuscarSalidasComponent } from './components/buscar-salidas/buscar-salidas.component';
 
 // Componentes inventario
-import { RegistrarProductoComponent } from './registrar-producto/registrar-producto.component';
-import { MostrarVistaComponent } from './mostrar-vista/mostrar-vista.component';
-import { MostrarInventarioComponent } from './mostrar-inventario/mostrar-inventario.component';
-import { PanelInventarioComponent } from './panel-inventario/panel-inventario.component';
-import { InventarioRoutingModule } from './inventario-routing.module';
-import { MostrarEntradasComponent } from './mostrar-entradas/mostrar-entradas.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +38,10 @@ import { MostrarEntradasComponent } from './mostrar-entradas/mostrar-entradas.co
     MostrarInventarioComponent,
     PanelInventarioComponent,
     MostrarEntradasComponent,
+    EditarInventarioComponent,
+    ConfirmDialogComponent,
+    EditarEntradaPesoComponent,
+    BuscarSalidasComponent,
   ],
   imports: [
     CommonModule,
@@ -48,11 +58,13 @@ import { MostrarEntradasComponent } from './mostrar-entradas/mostrar-entradas.co
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatDialogModule,
+    MatButtonModule,
 
-    NgxBarcode6Module, 
+    NgxBarcode6Module,
     ToastrModule.forRoot(),
 
-    
+
   ]
 })
 export class InventarioModule { }

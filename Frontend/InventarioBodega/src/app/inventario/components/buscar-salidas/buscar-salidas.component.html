@@ -1,0 +1,39 @@
+<div class="buscar-salidas-container">
+    <h2>Buscar referencia para salida</h2>
+    <!-- Buscador en tiempo real -->
+    <mat-form-field appearance="outline" class="search-box">
+        <mat-label>Escanear referencia</mat-label>
+        <input matInput [(ngModel)]="filtroReferencia" (ngModelChange)="onSearchChange($event)">
+    </mat-form-field>
+
+    <!-- Tabla de resultados -->
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <!-- columnas igual que antes -->
+        <ng-container matColumnDef="referenciaPeso">
+            <th mat-header-cell *matHeaderCellDef>Referencia</th>
+            <td mat-cell *matCellDef="let row">{{ row.referenciaPeso }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaRegistroItem">
+            <th mat-header-cell *matHeaderCellDef>Fecha Registro</th>
+            <td mat-cell *matCellDef="let row">{{ row.fechaRegistroItem | date:'short' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="pesoActual">
+            <th mat-header-cell *matHeaderCellDef>Peso</th>
+            <td mat-cell *matCellDef="let row">{{ row.pesoActual }} kg</td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let row" class="acciones">
+                <button mat-raised-button color="primary" (click)="enviar(row)">
+                    Enviar
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>

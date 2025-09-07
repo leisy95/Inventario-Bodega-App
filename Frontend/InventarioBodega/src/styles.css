@@ -1,8 +1,34 @@
-/* You can add global styles to this file, and also import other style files */
-/* Puedes añadir tus estilos CSS personalizados aquí si los necesitas */
-body {
-    font-family: 'Inter', sans-serif;
-    /* Usar fuente Inter */
-}
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:root {
+  /* Colores principales */
+  --color-primario: #1976d2;   /* Azul Material */
+  --color-boton-editar:  #2e7d32; /* Verde */
+  --color-boton-eliminar: #d32f2f;    /* Rojo */
+  --color-boton-enviar: #3f51b5;
+  --color-boton-cancelar: #666;
+  --color-advertencia: #ff9800;/* Naranja */
+  --color-exito: #2e7d32;      /* Verde oscuro */
+
+  /* Colores de interfaz */
+  --color-header: #1565c0;        /* Azul más oscuro */
+  --color-header-texto: #ffffff;  /* Blanco */
+  --color-fila-par: #f5f5f5;      /* Gris claro */
+  --color-fondo: #f8fafc;         /* Fondo principal */
+  --color-texto: #212121;         /* Texto principal */
+  --color-texto-secundario: #757575;
+  --color-texto-titulo: #1e293b;
+
+  /* Tipografía */
+  --fuente-base: 'Roboto', Arial, sans-serif;
+  --tamano-texto: 14px;
+}
+
+/*Estilo global para encabezado de tablas con Angular Material*/
+.mat-mdc-header-cell {
+    background-color: var(--color-header) !important;
+    color: var(--color-header-texto) !important;
+    font-weight: bold;
+    text-align: center;
+}

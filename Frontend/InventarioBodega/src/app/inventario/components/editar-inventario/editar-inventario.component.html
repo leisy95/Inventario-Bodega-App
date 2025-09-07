@@ -1,0 +1,70 @@
+<h2 mat-dialog-title>Editar Inventario</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="form" class="formulario">
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Referencia</mat-label>
+            <input matInput formControlName="referencia" cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Tipo Bolsa</mat-label>
+            <input matInput formControlName="tipoBolsa" cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Tipo Material</mat-label>
+            <input matInput formControlName="tipoMaterial" cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Densidad</mat-label>
+            <input matInput formControlName="densidad" cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Color</mat-label>
+            <input matInput formControlName="color" cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Segundo Color</mat-label>
+            <input matInput formControlName="segundoColor" cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Impreso</mat-label>
+            <input matInput formControlName="impresoNo" cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Ancho</mat-label>
+            <input matInput type="number" formControlName="ancho" cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Alto</mat-label>
+            <input matInput type="number" formControlName="alto" cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Calibre</mat-label>
+            <input matInput type="number" formControlName="calibre" cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Peso</mat-label>
+            <input matInput type="number" formControlName="peso" [value]="data.peso" disabled cdkFocusInitial>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Cantidad</mat-label>
+            <input matInput type="number" [value]="data.peso" disabled cdkFocusInitial>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancelar()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="guardar()">Guardar</button>
+</mat-dialog-actions>
