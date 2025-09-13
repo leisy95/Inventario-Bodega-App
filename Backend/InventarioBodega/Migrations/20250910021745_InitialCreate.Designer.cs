@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250828191520_AddInventarioItem")]
-    partial class AddInventarioItem
+    [Migration("20250910021745_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,151 +123,107 @@ namespace InventarioBackend.Migrations
                     b.Property<decimal>("PesoActual")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int?>("TipoProductoIdTipo")
-                        .HasColumnType("int");
+                    b.Property<string>("ReferenciaPeso")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdInventario");
-
-                    b.HasIndex("TipoProductoIdTipo");
 
                     b.ToTable("InventarioItems");
                 });
 
             modelBuilder.Entity("InventarioBackend.Models.MovimientoInventario", b =>
                 {
-                    b.Property<int>("IdMovimiento")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMovimiento"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("CantidadPeso")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<DateTime>("FechaMovimiento")
+                    b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdItem")
+                    b.Property<int>("IdInventario")
                         .HasColumnType("int");
 
-                    b.Property<string>("Observaciones")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<int>("IdInventarioItem")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TipoMovimiento")
+                    b.Property<decimal>("Peso")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("Referencia")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ReferenciaPeso")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<string>("Tipo")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("IdMovimiento");
-
-                    b.HasIndex("IdItem");
-
-                    b.ToTable("MovimientosInventario");
-                });
-
-            modelBuilder.Entity("InventarioBackend.Models.TipoProducto", b =>
-                {
-                    b.Property<int>("IdTipo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTipo"));
-
-                    b.Property<decimal>("Alto")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<decimal>("Ancho")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<decimal>("Calibre")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Densidad")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("ImpresoNo")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasColumnName("Impreso/No");
-
-                    b.Property<string>("Referencia")
+                    b.Property<string>("Usuario")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("SegundoColor")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("Segundo color");
+                    b.HasKey("Id");
 
-                    b.Property<string>("TipoBolsa")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Tipo de Bolsa");
+                    b.HasIndex("IdInventario");
 
-                    b.Property<string>("TipoMaterial")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Tipo Material");
+                    b.HasIndex("IdInventarioItem");
 
-                    b.HasKey("IdTipo");
-
-                    b.ToTable("TiposProducto");
+                    b.ToTable("MovimientosInventario");
                 });
 
             modelBuilder.Entity("InventarioBackend.Models.InventarioItem", b =>
                 {
                     b.HasOne("InventarioBackend.Models.Inventario", "Inventario")
-                        .WithMany()
+                        .WithMany("InventarioItems")
                         .HasForeignKey("IdInventario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("InventarioBackend.Models.TipoProducto", null)
-                        .WithMany("InventarioItems")
-                        .HasForeignKey("TipoProductoIdTipo");
 
                     b.Navigation("Inventario");
                 });
 
             modelBuilder.Entity("InventarioBackend.Models.MovimientoInventario", b =>
                 {
-                    b.HasOne("InventarioBackend.Models.InventarioItem", "InventarioItem")
+                    b.HasOne("InventarioBackend.Models.Inventario", "Inventario")
                         .WithMany("Movimientos")
-                        .HasForeignKey("IdItem")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("IdInventario")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("InventarioBackend.Models.InventarioItem", "InventarioItem")
+                        .WithMany("Movimientos")
+                        .HasForeignKey("IdInventarioItem")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Inventario");
+
                     b.Navigation("InventarioItem");
+                });
+
+            modelBuilder.Entity("InventarioBackend.Models.Inventario", b =>
+                {
+                    b.Navigation("InventarioItems");
+
+                    b.Navigation("Movimientos");
                 });
 
             modelBuilder.Entity("InventarioBackend.Models.InventarioItem", b =>
                 {
                     b.Navigation("Movimientos");
-                });
-
-            modelBuilder.Entity("InventarioBackend.Models.TipoProducto", b =>
-                {
-                    b.Navigation("InventarioItems");
                 });
 #pragma warning restore 612, 618
         }

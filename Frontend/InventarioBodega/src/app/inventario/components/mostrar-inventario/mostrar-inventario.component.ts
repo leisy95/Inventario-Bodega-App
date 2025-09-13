@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { EditarInventarioComponent } from '../editar-inventario/editar-inventario.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-mostrar-inventario',
@@ -36,6 +37,12 @@ export class MostrarInventarioComponent implements OnInit {
   cargarInventario() {
     this.inventarioService.getInventarios().subscribe({
       next: (data) => {
+
+        // Ordenar por referencia (alfabético ascendente)
+        const dataOrdenada = data.sort((a, b) =>
+          a.referencia.localeCompare(b.referencia, 'es', { numeric: true })
+        );
+
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -70,14 +77,21 @@ export class MostrarInventarioComponent implements OnInit {
   }
 
   eliminarInventario(id: number) {
-    if (confirm('¿Seguro que deseas eliminar este inventario?')) {
-      this.inventarioService.deleteInventario(id).subscribe({
-        next: () => {
-          this.dataSource.data = this.dataSource.data.filter(i => i.id !== id);
-          this.toastr.success('Inventario eliminado', 'Éxito');
-        },
-        error: () => this.toastr.error('No se pudo eliminar', 'Error')
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: '¿Seguro que quieres eliminar esta referncia?' },
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.inventarioService.deleteInventario(id).subscribe({
+          next: () => {
+            this.dataSource.data = this.dataSource.data.filter(i => i.id !== id);
+            this.toastr.success('Inventario eliminado', 'Éxito');
+          },
+          error: () => this.toastr.error('No se pudo eliminar', 'Error')
+        });
+      }
+    })
   }
 }

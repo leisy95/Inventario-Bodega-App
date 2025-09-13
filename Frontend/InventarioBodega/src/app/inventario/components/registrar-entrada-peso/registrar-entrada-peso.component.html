@@ -1,14 +1,14 @@
 <div class="container">
     <div class="info-etiqueta">
         <div class="referencia">
-            <h2>Registro de Entrada</h2>
+            <h2>Registro de ingreso de Peso</h2>
             <form (ngSubmit)="buscar()">
                 <div class="referencia">
                     <!-- Hacemos uso de Angular material -->
                     <mat-form-field appearance="outline" floatLabel="always" class="form-field">
                         <mat-label>Referencia</mat-label>
                         <input matInput [formControl]="referenciaControl" [matAutocomplete]="auto"
-                            placeholder="Ej.1R0BL9009.0*000.0*4.00 ">
+                            placeholder="Ej.1R0BL9009.0*000.0*4.00 " (keyup.enter)="moverAlSegundo()" #referenciaInput>
                         <mat-autocomplete #auto="matAutocomplete">
                             <mat-option *ngFor="let ref of referenciasFiltradas | async" [value]="ref">
                                 {{ ref }}
@@ -20,11 +20,11 @@
                     <mat-form-field appearance="outline" floatLabel="always" class="form-field">
                         <mat-label>Peso (kg)</mat-label>
                         <input matInput type="number" [(ngModel)]="pesoIngresado" [ngModelOptions]="{standalone: true}"
-                            placeholder="Ingrese el peso" 
-                            [disabled]="!inventario || !inventario.referencia">
+                            placeholder="Ingrese el peso" [disabled]="!inventario || !inventario.referencia"
+                            (keydown.enter)="confirmarIngresoPeso()" #segundoInput>
                     </mat-form-field>
-                    <button mat-raised-button color="primary" (click)="agregarPeso()"
-                    [disabled]="!inventario || !inventario.referencia">
+                    <button mat-raised-button color="primary" (click)="confirmarIngresoPeso()"
+                        [disabled]="!inventario || !inventario.referencia">
                         Ingresar Peso
                     </button>
 

@@ -30,7 +30,9 @@ export class EditarInventarioComponent {
       impresoNo: [this.data.impresoNo],
       ancho: [this.data.ancho, Validators.required],
       alto: [this.data.alto, Validators.required],
-      cantidad: [this.data.cantidad || 0, Validators.required],
+      calibre: [this.data.calibre],
+      peso: [{ value: this.data.peso, disabled: true }],
+      cantidad:  [{ value: this.data.cantidad, disabled: true }]
     });
   }
 
@@ -41,7 +43,7 @@ export class EditarInventarioComponent {
     }
 
     const inventarioActualizado = {
-      id: this.data.id,                   // 🔹 obligatorio
+      id: this.data.id,                 
       referencia: this.form.value.referencia,
       descripcion: this.form.value.descripcion || '',
       tipoBolsa: this.form.value.tipoBolsa || '',
@@ -54,7 +56,7 @@ export class EditarInventarioComponent {
       alto: Number(this.form.value.alto) || 0,
       calibre: Number(this.form.value.calibre) || 0,
       peso: this.data.peso,         //  no se edita
-      cantidad: this.data.peso, //  no se edita
+      cantidad: this.data.cantidad, //  no se edita
       referenciaNormalizada: this.data.referenciaNormalizada || '',
       inventarioItems: []
     };

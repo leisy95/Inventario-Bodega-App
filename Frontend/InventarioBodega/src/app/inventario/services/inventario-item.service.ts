@@ -31,13 +31,30 @@ export class InventarioItemService {
     return this.http.post<any>(this.apiUrl, item);
   }
 
-  // Actualizar entrada solo peso
+  // Actualizar entrada solo peso InventarioItem
   updatePesoEntrada(id: number, pesoActual: number) {
     return this.http.put<any>(`${this.apiUrl}/${id}`, { pesoActual });
   }
 
-  // Eliminar entrada de inventarioIten
+  // Eliminar entrada de inventarioItem
   deleteEntrada(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
+
+  // Salidas de InventarioItem
+  darSalida(id: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/salida/${id}`, {});
+  }
+
+  darSalidas(referencias: string[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/salidas`, referencias);
+  }
+
+  buscarItems(referencia: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/buscar?referencia=${referencia}`);
+  }
+
+  buscarFIFO(referencia: string): Observable<InventarioItem> {
+    return this.http.get<InventarioItem>(`${this.apiUrl}/buscar-fifo?referencia=${referencia}`);
   }
 }

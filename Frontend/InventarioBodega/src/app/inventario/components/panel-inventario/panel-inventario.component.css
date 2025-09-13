@@ -114,3 +114,14 @@
 .panel-container.collapsed .content {
     margin-left: 60px;
 }
+
+@media print {
+    .sidebar {
+        display: none !important;
+    }
+
+    .content {
+        width: 100% !important;
+        /* Para que el contenido se expanda */
+    }
+}

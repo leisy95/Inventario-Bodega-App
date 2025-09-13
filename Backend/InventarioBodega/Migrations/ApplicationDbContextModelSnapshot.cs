@@ -134,33 +134,49 @@ namespace InventarioBackend.Migrations
 
             modelBuilder.Entity("InventarioBackend.Models.MovimientoInventario", b =>
                 {
-                    b.Property<int>("IdMovimiento")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMovimiento"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("CantidadPeso")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<DateTime>("FechaMovimiento")
+                    b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdItem")
+                    b.Property<int>("IdInventario")
                         .HasColumnType("int");
 
-                    b.Property<string>("Observaciones")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<int>("IdInventarioItem")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TipoMovimiento")
+                    b.Property<decimal>("Peso")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("Referencia")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ReferenciaPeso")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<string>("Tipo")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("IdMovimiento");
+                    b.Property<string>("Usuario")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasIndex("IdItem");
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdInventario");
+
+                    b.HasIndex("IdInventarioItem");
 
                     b.ToTable("MovimientosInventario");
                 });
@@ -178,11 +194,19 @@ namespace InventarioBackend.Migrations
 
             modelBuilder.Entity("InventarioBackend.Models.MovimientoInventario", b =>
                 {
+                    b.HasOne("InventarioBackend.Models.Inventario", "Inventario")
+                        .WithMany("Movimientos")
+                        .HasForeignKey("IdInventario")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("InventarioBackend.Models.InventarioItem", "InventarioItem")
                         .WithMany("Movimientos")
-                        .HasForeignKey("IdItem")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("IdInventarioItem")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Inventario");
 
                     b.Navigation("InventarioItem");
                 });
@@ -190,6 +214,8 @@ namespace InventarioBackend.Migrations
             modelBuilder.Entity("InventarioBackend.Models.Inventario", b =>
                 {
                     b.Navigation("InventarioItems");
+
+                    b.Navigation("Movimientos");
                 });
 
             modelBuilder.Entity("InventarioBackend.Models.InventarioItem", b =>

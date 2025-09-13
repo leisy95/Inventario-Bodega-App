@@ -20,8 +20,19 @@ namespace InventarioBackend.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configuración para evitar multiple cascade paths
+            modelBuilder.Entity<MovimientoInventario>()
+                .HasOne(m => m.Inventario)
+                .WithMany(i => i.Movimientos)
+                .HasForeignKey(m => m.IdInventario)
+                .OnDelete(DeleteBehavior.Restrict); // 👈 usa Restrict para mayor claridad
 
-            // Asegúrate de llamar al método base
+            modelBuilder.Entity<MovimientoInventario>()
+                .HasOne(m => m.InventarioItem)
+                .WithMany(ii => ii.Movimientos)
+                .HasForeignKey(m => m.IdInventarioItem)
+                .OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(modelBuilder);
         }
     }

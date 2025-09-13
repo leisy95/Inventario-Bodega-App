@@ -15,6 +15,7 @@ import { EditarEntradaPesoComponent } from '../editar-entrada-peso/editar-entrad
   styleUrls: ['./mostrar-entradas.component.css']
 })
 export class MostrarEntradasComponent implements OnInit, AfterViewInit {
+
   displayedColumns: string[] = ['referenciaPeso', 'fechaRegistroItem', 'pesoActual', 'estado', 'acciones'];
   dataSource = new MatTableDataSource<InventarioItem>([]);
 
@@ -28,6 +29,10 @@ export class MostrarEntradasComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
+    // Configurar filtro personalizado para solo referenciaPeso
+    this.dataSource.filterPredicate = (data: InventarioItem, filter: string) =>
+      data.referenciaPeso.toLowerCase().includes(filter);
+
     this.cargarEntradas();
   }
 
@@ -38,42 +43,47 @@ export class MostrarEntradasComponent implements OnInit, AfterViewInit {
 
   cargarEntradas(): void {
     this.inventarioItemService.getEntradas().subscribe({
-      next: (data) => {
+      next: (data: InventarioItem[]) => {
         this.dataSource.data = data;
-
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
       },
-      error: () => {
-        this.toastr.error('No se pudieron cargar las entradas', 'Error');
-      }
+      error: () => this.toastr.error('No se pudieron cargar las entradas', 'Error')
     });
   }
 
-  editarItem(item: InventarioItem): void {
-  const dialogRef = this.dialog.open(EditarEntradaPesoComponent, {
-    width: '400px',
-    data: { pesoActual: item.pesoActual }
-  });
+  aplicarFiltro(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = filterValue;
 
-  dialogRef.afterClosed().subscribe(nuevoPeso => {
-    if (nuevoPeso !== undefined && nuevoPeso !== null) {
-      this.inventarioItemService.updatePesoEntrada(item.id, nuevoPeso).subscribe({
-        next: (res) => {
-          // actualizar tabla
-          const idx = this.dataSource.data.findIndex(i => i.id === item.id);
-          if (idx !== -1) {
-            this.dataSource.data[idx].pesoActual = res.pesoActual ?? nuevoPeso;
-            this.dataSource.data[idx].referenciaPeso = res.referenciaPeso ?? this.dataSource.data[idx].referenciaPeso;
-            this.dataSource._updateChangeSubscription();
-          }
-          this.toastr.success('Peso actualizado correctamente', 'Éxito');
-        },
-        error: () => this.toastr.error('No se pudo actualizar el peso', 'Error')
-      });
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
-  });
-}
+  }
+
+  editarItem(item: InventarioItem): void {
+    const dialogRef = this.dialog.open(EditarEntradaPesoComponent, {
+      width: '400px',
+      data: { pesoActual: item.pesoActual }
+    });
+
+    dialogRef.afterClosed().subscribe(nuevoPeso => {
+      if (nuevoPeso != null) {
+        this.inventarioItemService.updatePesoEntrada(item.id, nuevoPeso).subscribe({
+          next: (res) => {
+            // ✅ Actualizar directamente el peso en la tabla
+            const idx = this.dataSource.data.findIndex(i => i.id === item.id);
+            if (idx !== -1) {
+              this.dataSource.data[idx].pesoActual = nuevoPeso;
+              this.dataSource._updateChangeSubscription();
+            }
+            this.toastr.success('Peso actualizado correctamente', 'Éxito');
+          },
+          error: (err) => {
+            this.toastr.error(err.error, 'Error');
+          }
+        });
+      }
+    });
+  }
 
   eliminarItem(id: number): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -81,26 +91,18 @@ export class MostrarEntradasComponent implements OnInit, AfterViewInit {
       disableClose: true
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    dialogRef.afterClosed().subscribe(confirm => {
+      if (confirm) {
         this.inventarioItemService.deleteEntrada(id).subscribe({
-          next: () => {
-            // Eliminar del dataSource
+          next: (res) => {
             this.dataSource.data = this.dataSource.data.filter(item => item.id !== id);
-            this.toastr.success('Inventario eliminado', 'Éxito');
+            this.toastr.success(res.message || 'Entrada eliminada', 'Éxito');
           },
-          error: () => this.toastr.error('No se pudo eliminar')
+          error: (err) => {
+            this.toastr.error(err.error, 'Error');
+          }
         });
       }
     });
-  }
-
-  aplicarFiltro(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
   }
 }

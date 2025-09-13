@@ -8,26 +8,37 @@ namespace InventarioBackend.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int IdMovimiento { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        public int IdItem { get; set; } // Clave foránea a InventarioItem
-
-        [ForeignKey("IdItem")]
-        public InventarioItem InventarioItem { get; set; } // Propiedad de navegación
+        [MaxLength(50)]
+        public string Referencia { get; set; } // Ej: 1R0BL003004
 
         [Required]
-        public DateTime FechaMovimiento { get; set; }
+        [MaxLength(60)]
+        public string ReferenciaPeso { get; set; } // Ej: 1R0BL0030044
 
-        [Required]
-        [StringLength(20)]
-        public string TipoMovimiento { get; set; } // Ej: "ENTRADA", "SALIDA"
-
-        [Required]
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal CantidadPeso { get; set; }
+        public decimal Peso { get; set; }
 
-        [StringLength(255)]
-        public string? Observaciones { get; set; } // Anulable
+        [Required]
+        public DateTime Fecha { get; set; } = DateTime.Now;
+
+        [Required]
+        [MaxLength(20)]
+        public string Tipo { get; set; } // "Entrada" | "Salida"
+
+        [MaxLength(100)]
+        public string Usuario { get; set; }
+
+        // Relación con Inventario (general)
+        [ForeignKey("Inventario")]
+        public int IdInventario { get; set; }
+        public Inventario Inventario { get; set; }
+
+        // Relación con InventarioItem (paquete exacto)
+        [ForeignKey("InventarioItem")]
+        public int IdInventarioItem { get; set; }
+        public InventarioItem InventarioItem { get; set; }
     }
 }

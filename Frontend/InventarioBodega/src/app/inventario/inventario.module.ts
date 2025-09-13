@@ -17,7 +17,6 @@ import { NgxBarcode6Module } from 'ngx-barcode6';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { RegistrarProductoComponent } from './components/registrar-producto/registrar-producto.component';
-import { MostrarVistaComponent } from './components/mostrar-vista/mostrar-vista.component';
 import { MostrarInventarioComponent } from './components/mostrar-inventario/mostrar-inventario.component';
 import { PanelInventarioComponent } from './components/panel-inventario/panel-inventario.component';
 import { MostrarEntradasComponent } from './components/mostrar-entradas/mostrar-entradas.component';
@@ -28,13 +27,14 @@ import { ConfirmDialogComponent } from './components/shared/confirm-dialog/confi
 import { EditarInventarioComponent } from './components/editar-inventario/editar-inventario.component';
 import { EditarEntradaPesoComponent } from './components/editar-entrada-peso/editar-entrada-peso.component';
 import { BuscarSalidasComponent } from './components/buscar-salidas/buscar-salidas.component';
+import { RegistrarEntradaPesoComponent } from './components/registrar-entrada-peso/registrar-entrada-peso.component';
 
 // Componentes inventario
 
 @NgModule({
   declarations: [
     RegistrarProductoComponent,
-    MostrarVistaComponent,
+    RegistrarEntradaPesoComponent,
     MostrarInventarioComponent,
     PanelInventarioComponent,
     MostrarEntradasComponent,

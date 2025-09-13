@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MostrarVistaComponent } from './mostrar-vista.component';
+import { MostrarVistaComponent } from './registrar-entrada-peso.component';
 
 describe('MostrarVistaComponent', () => {
   let component: MostrarVistaComponent;

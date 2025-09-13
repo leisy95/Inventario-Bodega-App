@@ -56,5 +56,6 @@ namespace InventarioBackend.Models
         public string ReferenciaNormalizada { get; set; }
 
         public ICollection<InventarioItem> InventarioItems { get; set; } = new List<InventarioItem>();
+        public ICollection<MovimientoInventario> Movimientos { get; set; } = new List<MovimientoInventario>();
     }
 }

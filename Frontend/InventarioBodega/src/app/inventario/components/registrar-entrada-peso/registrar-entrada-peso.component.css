@@ -208,7 +208,8 @@ button:active {
 
     .referencia,
     h1,
-    button {
+    button,
+    app-panel-inventario {
         display: none !important;
     }
 

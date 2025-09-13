@@ -1,5 +1,6 @@
 ﻿using InventarioBackend.Data;
 using InventarioBackend.DTOs;
+using InventarioBackend.Helpers;
 using InventarioBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,8 +30,9 @@ namespace InventarioBackend.Controllers
         // GET: api/inventario
         [HttpGet("buscar/{referencia}")]
         public async Task<ActionResult<Inventario>> GetByReferencia(string referencia)
+
         {
-            var refNormalizada = referencia.Replace(".", "").Replace("*", "");
+            var refNormalizada = ReferenciaHelper.Normalize(referencia);
 
             // Buscar en la columna indexada
             var inventario = await _context.Inventarios
@@ -49,7 +51,7 @@ namespace InventarioBackend.Controllers
                 return BadRequest(ModelState);
 
             // Normalizar la referencia
-            var refNormalizada = input.Referencia.Replace(".", "").Replace("*", "");
+            var refNormalizada = ReferenciaHelper.Normalize(input.Referencia);
 
             var producto = await _context.Inventarios
                                  .FirstOrDefaultAsync(p => p.ReferenciaNormalizada == refNormalizada);
@@ -67,7 +69,7 @@ namespace InventarioBackend.Controllers
                 IdInventario = producto.Id,
                 PesoActual = input.Peso,
                 FechaRegistroItem = DateTime.Now,
-                Estado = "INGRESADO",
+                Estado = "EN_ALMACEN",
                 ReferenciaPeso = referenciaConPeso
             };
 
