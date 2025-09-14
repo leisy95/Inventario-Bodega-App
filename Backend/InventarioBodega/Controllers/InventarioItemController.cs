@@ -127,6 +127,62 @@ namespace InventarioBackend.Controllers
             return Ok(new { message = "Salidas registradas con éxito" });
         }
 
+        [HttpPut("update-peso/{id}")]
+        public async Task<IActionResult> UpdatePeso(int id, [FromBody] EditarPesoRequest request)
+        {
+            if (request == null)
+                return BadRequest("Datos inválidos.");
+
+            var item = await _context.InventarioItems.FindAsync(id);
+            if (item == null)
+                return NotFound("Item no encontrado.");
+
+            if (item.Estado != "EN_ALMACEN")
+                return BadRequest("Solo se pueden editar items con estado EN_ALMACEN.");
+
+            var inventario = await _context.Inventarios.FindAsync(item.IdInventario);
+            if (inventario == null)
+                return NotFound("Inventario general no encontrado.");
+
+            var pesoAntiguo = item.PesoActual;
+            var diferenciaPeso = request.PesoActual - pesoAntiguo;
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Actualizar item
+                item.PesoActual = request.PesoActual;
+
+                // Ajustar inventario general
+                inventario.Peso = Math.Max(0, inventario.Peso + diferenciaPeso);
+
+                // Registrar movimiento histórico
+                var movimiento = new MovimientoInventario
+                {
+                    Referencia = inventario.ReferenciaNormalizada,
+                    ReferenciaPeso = item.ReferenciaPeso,
+                    Peso = request.PesoActual,
+                    Fecha = DateTime.UtcNow,
+                    Tipo = $"Modificación Peso ({pesoAntiguo} → {request.PesoActual})",
+                    Usuario = User?.Identity?.Name ?? "Sistema",
+                    IdInventario = inventario.Id,
+                    IdInventarioItem = item.Id
+                };
+                _context.MovimientosInventario.Add(movimiento);
+
+                // Guardar cambios
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Ok(new { message = "Peso actualizado, inventario ajustado y movimiento registrado" });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Error interno: {ex.Message}");
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(int id)
         {

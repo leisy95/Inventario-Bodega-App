@@ -25,7 +25,7 @@ namespace InventarioBackend.Models
         public DateTime Fecha { get; set; } = DateTime.Now;
 
         [Required]
-        [MaxLength(20)]
+        [MaxLength(100)]
         public string Tipo { get; set; } // "Entrada" | "Salida"
 
         [MaxLength(100)]

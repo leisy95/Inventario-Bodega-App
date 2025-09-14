@@ -66,7 +66,7 @@ export class RegistrarEntradaPesoComponent implements OnInit {
         // Filtrado en memoria con debounce
         this.referenciasFiltradas = this.referenciaControl.valueChanges.pipe(
           startWith(''),
-          debounceTime(200), 
+          debounceTime(200),
           map(value => this._filter(value || ''))
         );
       }
@@ -167,7 +167,17 @@ export class RegistrarEntradaPesoComponent implements OnInit {
     window.print();
   }
 
+  getBarcodeWidth(): number {
+    const length = this.getReferenciaParaBarcode().length;
+    return length > 16 ? 2 : 3;
+  }
+
   getReferenciaParaBarcode(): string {
-    return this.ultimaReferenciaPeso || '';
+    console.log(this.ultimaReferenciaPeso)
+    const ref = (this.inventario?.referencia || '').replace(/[.*]/g, '');
+    const peso = this.ultimaReferenciaPeso != null
+      ? String(this.ultimaReferenciaPeso).replace('.', '')
+      : '';
+    return (ref + peso).toUpperCase();
   }
 }

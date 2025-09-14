@@ -37,7 +37,7 @@
         <div class="etiqueta" *ngIf="inventario && inventario.referencia">
             <div class="codigo-barras">
                 <ngx-barcode6 class="barcode" [bc-format]="'CODE128'" [bc-value]="getReferenciaParaBarcode()"
-                    [bc-display-value]="false" [bc-width]="3" [bc-height]="70">
+                    [bc-display-value]="false" [bc-width]="2" [bc-height]="70">
                 </ngx-barcode6>
             </div>
             <div class="contenido">
@@ -98,9 +98,9 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="fecha-impresion">
-            Fecha de impresión: {{ fechaImpresion | date:'dd/MM/yyyy HH:mm' }}
+            <div class="fecha-impresion">
+                Fecha de impresión: {{ fechaImpresion | date:'dd/MM/yyyy HH:mm' }}
+            </div>
         </div>
         <button mat-raised-button color="primary" (click)="imprimirEtiqueta()">Imprimir</button>
     </div>

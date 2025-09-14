@@ -33,7 +33,7 @@ export class InventarioItemService {
 
   // Actualizar entrada solo peso InventarioItem
   updatePesoEntrada(id: number, pesoActual: number) {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, { pesoActual });
+    return this.http.put<any>(`${this.apiUrl}/update-peso/${id}`, { pesoActual });
   }
 
   // Eliminar entrada de inventarioItem

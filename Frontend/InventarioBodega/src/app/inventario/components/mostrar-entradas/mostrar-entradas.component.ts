@@ -69,7 +69,7 @@ export class MostrarEntradasComponent implements OnInit, AfterViewInit {
       if (nuevoPeso != null) {
         this.inventarioItemService.updatePesoEntrada(item.id, nuevoPeso).subscribe({
           next: (res) => {
-            // ✅ Actualizar directamente el peso en la tabla
+            // Actualizar directamente el peso en la tabla
             const idx = this.dataSource.data.findIndex(i => i.id === item.id);
             if (idx !== -1) {
               this.dataSource.data[idx].pesoActual = nuevoPeso;

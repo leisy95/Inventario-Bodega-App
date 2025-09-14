@@ -180,32 +180,36 @@ button:active {
     display: none;
 }
 
-/* Imprimir Etiqueta */
-
 @media print {
     @page {
         size: 152mm 140mm;
-        margin: 0;
+        margin: 5mm;
     }
 
     .container {
-        display: block;
-        width: 152mm;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        page-break-inside: avoid;
     }
 
     .etiqueta {
         box-sizing: border-box;
-        width: 150mm;
-        height: 99mm;
-        margin: 0 auto;
+        width: 100%;
+        height: 100%;
+        padding: 5mm;
         text-align: center;
-        page-break-inside: avoid;
+        border: 1px solid black;
+        /* solo guía, puedes quitarlo */
     }
 
     .etiqueta:last-child {
         page-break-after: auto;
     }
 
+    /* Ocultar elementos innecesarios */
     .referencia,
     h1,
     button,
@@ -213,14 +217,18 @@ button:active {
         display: none !important;
     }
 
+    /* Fecha como footer interno */
     .fecha-impresion {
-        display: block;
         position: absolute;
-        bottom: -0.26mm;
-        font-size: 11px;
+        bottom: 0;
+        /* ajusta según quieras */
+        left: 0;
+        right: 0;
+        font-size: 10px;
         color: #444;
-        text-align: right;
-        margin-top: 15px;
+        text-align: center;
+        padding-top: 2px;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: block !important;
     }
 }
