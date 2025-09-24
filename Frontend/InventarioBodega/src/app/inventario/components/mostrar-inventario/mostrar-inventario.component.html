@@ -1,12 +1,18 @@
 <div class="inventario-container">
     <h2>Inventario</h2>
 
-    <!-- Buscador -->
-    <mat-form-field appearance="outline" class="search-box">
-        <mat-label>Buscar inventario</mat-label>
-        <input matInput (keyup)="aplicarFiltro($event)" placeholder="Referencia, color, material...">
-        <i matSuffix class="fas fa-search"></i>
-    </mat-form-field>
+    <div class="acciones">
+        <!-- Buscador -->
+        <mat-form-field appearance="outline" class="search-box">
+            <mat-label>Buscar inventario</mat-label>
+            <input matInput (keyup)="aplicarFiltro($event)" placeholder="Referencia, color, material...">
+            <i matSuffix class="fas fa-search"></i>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="ModalRegistrarProducto()">
+            <i class="fas fa-plus icon"></i> Agregar nuevo producto
+        </button>
+    </div>
 
     <!--Tabla -->
     <div class="tabla-contenedor">

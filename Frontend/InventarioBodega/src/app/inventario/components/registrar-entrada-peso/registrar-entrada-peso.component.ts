@@ -167,17 +167,9 @@ export class RegistrarEntradaPesoComponent implements OnInit {
     window.print();
   }
 
-  getBarcodeWidth(): number {
-    const length = this.getReferenciaParaBarcode().length;
-    return length > 16 ? 2 : 3;
-  }
-
   getReferenciaParaBarcode(): string {
-    console.log(this.ultimaReferenciaPeso)
-    const ref = (this.inventario?.referencia || '').replace(/[.*]/g, '');
-    const peso = this.ultimaReferenciaPeso != null
-      ? String(this.ultimaReferenciaPeso).replace('.', '')
+    return this.ultimaReferenciaPeso
+      ? String(this.ultimaReferenciaPeso).toUpperCase()
       : '';
-    return (ref + peso).toUpperCase();
   }
 }

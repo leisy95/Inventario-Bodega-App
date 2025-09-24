@@ -73,7 +73,8 @@
 
 .sidebar .icon,
 .fa-box-open,
-.fa-truck-loading {
+.fa-truck-loading,
+.fa-list-ol {
     font-size: 1.2rem;
     margin-right: 0.5rem;
 }

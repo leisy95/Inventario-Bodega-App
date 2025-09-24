@@ -23,47 +23,61 @@ export class BuscarSalidasComponent {
 
   // Cada vez que el lector escanee algo
   onScanChange(valor: string) {
-    if (!valor || valor.trim().length < 3) return;
+  if (!valor || valor.trim().length < 3) return;
 
-    // Aquí usamos el endpoint FIFO que devuelve SOLO el más antiguo disponible
-    this.inventarioItemService.buscarFIFO(valor).subscribe({
-      next: (item) => {
-        if (item) {
-          this.itemsSeleccionados.push(item); // se permite repetir si existen varios en bodega
+  this.inventarioItemService.buscarFIFO(valor).subscribe({
+    next: (item) => {
+      if (item) {
+        // Evitar duplicados si ya se agregó el mismo item exacto
+        const yaExiste = this.itemsSeleccionados.some(x => x.referenciaPeso === item.referenciaPeso);
+        if (!yaExiste) {
+          this.itemsSeleccionados.push(item);
           this.dataSource.data = [...this.itemsSeleccionados];
           this.toastr.success('Referencia agregada', item.referenciaPeso);
         } else {
-          this.toastr.warning('No se encontró la referencia');
+          this.toastr.info('Este item ya está en la lista', item.referenciaPeso);
         }
-        this.resetInput();
-      },
-      error: () => {
-        this.toastr.warning('No quedan más disponibles en almacén');
-        this.resetInput();
+      } else {
+        this.toastr.warning('No se encontró la referencia');
       }
-    });
+      this.resetInput();
+    },
+    error: (err) => {
+      // Mostrar mensaje detallado si el backend lo envía
+      if (err.error && err.error.message) {
+        this.toastr.warning(err.error.message);
+      } else {
+        this.toastr.warning('No quedan más disponibles en almacén');
+      }
+      this.resetInput();
+    }
+  });
+}
+
+enviarSalidas() {
+  if (this.itemsSeleccionados.length === 0) {
+    this.toastr.warning('No hay referencias seleccionadas');
+    return;
   }
 
-  enviarSalidas() {
-    if (this.itemsSeleccionados.length === 0) {
-      this.toastr.warning('No hay referencias seleccionadas');
-      return;
-    }
+  const referencias = this.itemsSeleccionados.map(x => x.referenciaPeso);
 
-    const referencias = this.itemsSeleccionados.map(x => x.referenciaPeso);
-
-    this.inventarioItemService.darSalidas(referencias).subscribe({
-      next: () => {
-        this.toastr.success('Salidas procesadas correctamente');
-        this.itemsSeleccionados = [];
-        this.dataSource.data = [];
-        this.resetInput();
-      },
-      error: () => {
+  this.inventarioItemService.darSalidas(referencias).subscribe({
+    next: (res) => {
+      this.toastr.success(res.message || 'Salidas procesadas correctamente');
+      this.itemsSeleccionados = [];
+      this.dataSource.data = [];
+      this.resetInput();
+    },
+    error: (err) => {
+      if (err.error && err.error.message) {
+        this.toastr.error(err.error.message);
+      } else {
         this.toastr.error('Error al procesar las salidas');
       }
-    });
-  }
+    }
+  });
+}
 
   quitarSeleccionado(index: number) {
     const item = this.itemsSeleccionados[index];

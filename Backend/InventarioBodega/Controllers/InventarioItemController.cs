@@ -66,20 +66,29 @@ namespace InventarioBackend.Controllers
         [HttpGet("buscar-fifo")]
         public async Task<IActionResult> BuscarFIFO([FromQuery] string referencia)
         {
+            if (string.IsNullOrWhiteSpace(referencia))
+                return BadRequest("Debe enviar una referencia base.");
+
+            // Buscar el primer item disponible con esa referencia base
             var item = await _context.InventarioItems
-                .Where(i => i.ReferenciaPeso == referencia && i.Estado == "EN_ALMACEN")
-                .OrderBy(i => i.FechaRegistroItem) // más antiguo primero
+                .Where(i => i.ReferenciaPeso.StartsWith(referencia) && i.Estado == "EN_ALMACEN")
+                .OrderBy(i => i.FechaRegistroItem) // FIFO: el más antiguo primero
                 .FirstOrDefaultAsync();
 
             if (item == null)
                 return NotFound("No hay más items disponibles con esa referencia.");
+
+            // También devolvemos cuántos quedan disponibles
+            var disponibles = await _context.InventarioItems
+                .CountAsync(i => i.ReferenciaPeso.StartsWith(referencia) && i.Estado == "EN_ALMACEN");
 
             return Ok(new
             {
                 item.Id,
                 item.ReferenciaPeso,
                 item.PesoActual,
-                item.FechaRegistroItem
+                item.FechaRegistroItem,
+                Disponibles = disponibles
             });
         }
 
@@ -88,8 +97,31 @@ namespace InventarioBackend.Controllers
         public async Task<IActionResult> DarSalidas([FromBody] List<string> referenciasPeso)
         {
             if (referenciasPeso == null || !referenciasPeso.Any())
-                return BadRequest("No se recibieron referencias.");
+                return BadRequest(new { message = "No se recibieron referencias." });
 
+            // Agrupamos las referencias que vienen del frontend
+            var refsAgrupadas = referenciasPeso.GroupBy(r => r);
+
+            foreach (var grupo in refsAgrupadas)
+            {
+                string refPeso = grupo.Key;
+                int cantidadSolicitada = grupo.Count();
+
+                // Contamos cuántos disponibles hay realmente en el almacén
+                int disponibles = await _context.InventarioItems
+                    .CountAsync(i => i.ReferenciaPeso == refPeso && i.Estado == "EN_ALMACEN");
+
+                if (disponibles < cantidadSolicitada)
+                {
+                    return BadRequest(new
+                    {
+                        message = $"Se solicitaron {cantidadSolicitada} salidas para {refPeso}, " +
+                                  $"pero solo hay {disponibles} disponibles."
+                    });
+                }
+            }
+
+            // Si pasó la validación, procesamos normalmente
             foreach (var refPeso in referenciasPeso)
             {
                 var item = await _context.InventarioItems
@@ -114,8 +146,7 @@ namespace InventarioBackend.Controllers
                     Peso = item.PesoActual,
                     Fecha = DateTime.Now,
                     Tipo = "Salida",
-                    Usuario = "Sistema" // Aquí luego pones el usuario autenticado (JWT)
-                    ,
+                    Usuario = "Sistema", // luego JWT
                     IdInventario = inventario.Id,
                     IdInventarioItem = item.Id
                 };

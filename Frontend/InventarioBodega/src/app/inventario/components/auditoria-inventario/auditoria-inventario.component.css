@@ -1,0 +1,103 @@
+/* Grid de tarjetas */
+.resumen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+/* Tarjetas */
+.resumen-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.resumen-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Íconos */
+.icon {
+    font-size: 36px;
+    margin-right: 10px;
+}
+
+/* Colores de borde y cabecera */
+.color-azul {
+    border-top: 5px solid #3f51b5;
+}
+
+.color-verde {
+    border-top: 5px solid #4caf50;
+}
+
+.color-rojo {
+    border-top: 5px solid #f44336;
+}
+
+.color-naranja {
+    border-top: 5px solid #ff9800;
+}
+
+.color-celeste {
+    border-top: 5px solid #2196f3;
+}
+
+.auditoria-container {
+    margin: 20px;
+}
+
+.resumen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.resumen-card {
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.resumen-card h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.resumen-card p {
+    margin: 0;
+    font-size: 14px;
+    color: gray;
+}
+
+.icon {
+    font-size: 30px;
+    margin-right: 10px;
+}
+
+.tabla-card {
+    padding: 10px;
+}
+
+.tabla-container {
+    overflow: auto;
+}
+
+.entrada {
+    color: green;
+    font-weight: bold;
+}
+
+.salida {
+    color: red;
+    font-weight: bold;
+}
+
+.filtro {
+    margin-left: auto;
+    width: 250px;
+}

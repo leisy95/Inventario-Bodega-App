@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { EditarInventarioComponent } from '../editar-inventario/editar-inventario.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { RegistrarProductoComponent } from '../registrar-producto/registrar-producto.component';
 
 @Component({
   selector: 'app-mostrar-inventario',
@@ -58,6 +59,21 @@ export class MostrarInventarioComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  ModalRegistrarProducto() {
+    const dialogRef = this.dialog.open(RegistrarProductoComponent, {
+      width: '900px',
+       maxHeight: '90vh',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result === true) {
+        this.toastr.success('Producto registrado', 'Éxito');
+        this.cargarInventario(); // refresca tabla
+      }
+    });
   }
 
   editarInventario(item: Inventario) {

@@ -11,6 +11,8 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
 
 // Extras
 import { NgxBarcode6Module } from 'ngx-barcode6';
@@ -28,6 +30,7 @@ import { EditarInventarioComponent } from './components/editar-inventario/editar
 import { EditarEntradaPesoComponent } from './components/editar-entrada-peso/editar-entrada-peso.component';
 import { BuscarSalidasComponent } from './components/buscar-salidas/buscar-salidas.component';
 import { RegistrarEntradaPesoComponent } from './components/registrar-entrada-peso/registrar-entrada-peso.component';
+import { AuditoriaInventarioComponent } from './components/auditoria-inventario/auditoria-inventario.component';
 
 // Componentes inventario
 
@@ -42,6 +45,7 @@ import { RegistrarEntradaPesoComponent } from './components/registrar-entrada-pe
     ConfirmDialogComponent,
     EditarEntradaPesoComponent,
     BuscarSalidasComponent,
+    AuditoriaInventarioComponent,
   ],
   imports: [
     CommonModule,
@@ -60,6 +64,9 @@ import { RegistrarEntradaPesoComponent } from './components/registrar-entrada-pe
     MatSortModule,
     MatDialogModule,
     MatButtonModule,
+    MatGridListModule,
+    MatCardModule,
+    MatTableModule,
 
     NgxBarcode6Module,
     ToastrModule.forRoot(),

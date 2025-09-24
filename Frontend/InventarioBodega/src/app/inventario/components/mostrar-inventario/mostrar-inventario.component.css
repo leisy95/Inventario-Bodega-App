@@ -11,10 +11,19 @@ h2 {
     font-weight: 600;
 }
 
+.acciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
 .search-box {
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 1rem;
+  width: 300px;
+}
+
+button i {
+  margin-right: 6px;
 }
 
 .tabla-contenedor {

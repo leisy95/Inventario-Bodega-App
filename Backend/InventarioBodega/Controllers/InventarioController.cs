@@ -75,11 +75,27 @@ namespace InventarioBackend.Controllers
 
             _context.InventarioItems.Add(nuevoItem);
 
-            // Sumar peso y cantidad
+            // Actualizar Inventario
             producto.Peso += input.Peso;
             producto.Cantidad += 1;
 
-            // Guardar cambios en la base de datos
+            // Guardar primero para obtener el Id del nuevo item
+            await _context.SaveChangesAsync();
+
+            // Crear registro histórico de movimiento
+            var nuevoMovimiento = new MovimientoInventario
+            {
+                Referencia = producto.Referencia,
+                ReferenciaPeso = nuevoItem.ReferenciaPeso,
+                Peso = input.Peso,
+                Fecha = DateTime.Now,
+                Tipo = "Entrada",
+                Usuario = User?.Identity?.Name ?? "Sistema",
+                IdInventario = producto.Id,
+                IdInventarioItem = nuevoItem.Id
+            };
+
+            _context.MovimientosInventario.Add(nuevoMovimiento);
             await _context.SaveChangesAsync();
 
             // Devolver la respuesta

@@ -35,11 +35,7 @@
 
         <h1 *ngIf="!inventario || !inventario.referencia">Ver etiqueta de Impresion</h1>
         <div class="etiqueta" *ngIf="inventario && inventario.referencia">
-            <div class="codigo-barras">
-                <ngx-barcode6 class="barcode" [bc-format]="'CODE128'" [bc-value]="getReferenciaParaBarcode()"
-                    [bc-display-value]="false" [bc-width]="2" [bc-height]="70">
-                </ngx-barcode6>
-            </div>
+            
             <div class="contenido">
                 <div class="tabla-datos">
                     <div class="header">Ancho</div>
@@ -49,6 +45,7 @@
                     <div class="header">FS</div>
                     <div class="header">Unidad</div>
                     <div class="header">Calibre</div>
+                    <div class="header">Peso KG</div>
 
                     <div>{{ inventario.ancho || 0 }}</div>
                     <div>{{ inventario.fl || 0 }}</div>
@@ -57,6 +54,7 @@
                     <div>{{ inventario.fs || 0 }}</div>
                     <div>{{ inventario.unidad || 'PG' }}</div>
                     <div>{{ inventario.calibre || 0 }}</div>
+                    <div>{{ pesoMostrado || 0 }}</div>
                 </div>
 
                 <div class="cuadros">
@@ -76,14 +74,6 @@
                         <div class="titulo">Troquel</div>
                         {{ inventario.troquel || 0 }}
                     </div>
-                </div>
-
-                <div class="referencia-impresa">
-                    Referencia Impresa<br>
-                    {{ inventario.referenciaImpresa || ''}}
-                </div>
-
-                <div class="tabla-datos-bottom">
                     <div class="cuadro">
                         <div class="titulo">Paqu N°</div>
                         {{ inventario.paqueteNumero || 0 }}
@@ -92,11 +82,17 @@
                         <div class="titulo">Paq x</div>
                         {{ inventario.paqueteCantidad || 0 }}
                     </div>
-                    <div class="cuadro">
-                        <div class="titulo">Peso KG</div>
-                        {{ pesoMostrado || 0 }}
-                    </div>
                 </div>
+
+                <div class="referencia-impresa">
+                    Referencia Impresa<br>
+                    {{ inventario.referenciaImpresa || ''}}
+                </div>
+            </div>
+            <div class="codigo-barras">
+                <ngx-barcode6 class="barcode" [bc-format]="'CODE128'" [bc-value]="getReferenciaParaBarcode()"
+                    [bc-display-value]="false" [bc-width]="3" [bc-height]="80">
+                </ngx-barcode6>
             </div>
             <div class="fecha-impresion">
                 Fecha de impresión: {{ fechaImpresion | date:'dd/MM/yyyy HH:mm' }}
