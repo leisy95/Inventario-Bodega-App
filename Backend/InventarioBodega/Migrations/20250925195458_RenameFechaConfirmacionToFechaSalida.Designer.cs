@@ -4,6 +4,7 @@ using InventarioBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250925195458_RenameFechaConfirmacionToFechaSalida")]
+    partial class RenameFechaConfirmacionToFechaSalida
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,6 +115,9 @@ namespace InventarioBackend.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("FechaRegistroItem")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaSalida")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("IdInventario")

@@ -4,6 +4,7 @@ using InventarioBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250924211327_AddFechaSalidaToInventarioItems")]
+    partial class AddFechaSalidaToInventarioItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,6 +117,9 @@ namespace InventarioBackend.Migrations
                     b.Property<DateTime>("FechaRegistroItem")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("FechaSalida")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("IdInventario")
                         .HasColumnType("int");
 
@@ -181,64 +187,6 @@ namespace InventarioBackend.Migrations
                     b.ToTable("MovimientosInventario");
                 });
 
-            modelBuilder.Entity("InventarioBackend.Models.Salida", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateTime?>("FechaCancelacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaSalida")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Usuario")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Salidas", (string)null);
-                });
-
-            modelBuilder.Entity("InventarioBackend.Models.SalidaItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("FechaAgregado")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("IdInventarioItem")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdSalida")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdInventarioItem");
-
-                    b.HasIndex("IdSalida");
-
-                    b.ToTable("SalidaItems", (string)null);
-                });
-
             modelBuilder.Entity("InventarioBackend.Models.InventarioItem", b =>
                 {
                     b.HasOne("InventarioBackend.Models.Inventario", "Inventario")
@@ -269,25 +217,6 @@ namespace InventarioBackend.Migrations
                     b.Navigation("InventarioItem");
                 });
 
-            modelBuilder.Entity("InventarioBackend.Models.SalidaItem", b =>
-                {
-                    b.HasOne("InventarioBackend.Models.InventarioItem", "InventarioItem")
-                        .WithMany()
-                        .HasForeignKey("IdInventarioItem")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InventarioBackend.Models.Salida", "Salida")
-                        .WithMany("Items")
-                        .HasForeignKey("IdSalida")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InventarioItem");
-
-                    b.Navigation("Salida");
-                });
-
             modelBuilder.Entity("InventarioBackend.Models.Inventario", b =>
                 {
                     b.Navigation("InventarioItems");
@@ -298,11 +227,6 @@ namespace InventarioBackend.Migrations
             modelBuilder.Entity("InventarioBackend.Models.InventarioItem", b =>
                 {
                     b.Navigation("Movimientos");
-                });
-
-            modelBuilder.Entity("InventarioBackend.Models.Salida", b =>
-                {
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

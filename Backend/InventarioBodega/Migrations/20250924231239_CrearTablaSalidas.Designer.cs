@@ -4,6 +4,7 @@ using InventarioBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250924231239_CrearTablaSalidas")]
+    partial class CrearTablaSalidas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,6 +117,9 @@ namespace InventarioBackend.Migrations
                     b.Property<DateTime>("FechaRegistroItem")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("FechaSalida")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("IdInventario")
                         .HasColumnType("int");
 
@@ -197,10 +203,10 @@ namespace InventarioBackend.Migrations
                     b.Property<DateTime?>("FechaCancelacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaCreacion")
+                    b.Property<DateTime?>("FechaConfirmacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaSalida")
+                    b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Usuario")

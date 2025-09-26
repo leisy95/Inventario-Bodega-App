@@ -1,28 +1,33 @@
-<div class="buscar-salidas-container">
-    <h2>Buscar referencia para salida</h2>
+<div class="salidas-container">
+    <h2>Registrar Salidas</h2>
 
-    <!-- Input que dispara búsqueda automáticamente -->
-    <mat-form-field appearance="outline" class="search-box">
+    <!-- Input de escaneo -->
+    <mat-form-field appearance="outline" class="w-100">
         <mat-label>Escanear referencia</mat-label>
-        <input #inputRef matInput [(ngModel)]="filtroReferencia" (ngModelChange)="onScanChange($event)" autofocus>
+        <input matInput [(ngModel)]="filtroReferencia" (ngModelChange)="onScanChange($event)" #inputRef autofocus />
     </mat-form-field>
 
-    <h3>Salidas seleccionadas</h3>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- Tabla de items agregados -->
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-100 mt-3">
+        <!-- ReferenciaPeso -->
         <ng-container matColumnDef="referenciaPeso">
-            <th mat-header-cell *matHeaderCellDef>Referencia</th>
-            <td mat-cell *matCellDef="let row">{{ row.referenciaPeso }}</td>
+            <th mat-header-cell *matHeaderCellDef>Referencia Peso</th>
+            <td mat-cell *matCellDef="let element">{{ element.referenciaPeso }}</td>
         </ng-container>
 
+        <!-- PesoActual -->
         <ng-container matColumnDef="pesoActual">
-            <th mat-header-cell *matHeaderCellDef>Peso</th>
-            <td mat-cell *matCellDef="let row">{{ row.pesoActual }} kg</td>
+            <th mat-header-cell *matHeaderCellDef>Peso Actual</th>
+            <td mat-cell *matCellDef="let element">{{ element.pesoActual }}</td>
         </ng-container>
 
+        <!-- Acciones -->
         <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef>Quitar</th>
-            <td mat-cell *matCellDef="let row; let i = index">
-                <button mat-button color="warn" (click)="quitarSeleccionado(i)">❌</button>
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-icon-button color="warn" (click)="quitarSeleccionado(element)">
+                    <mat-icon>delete</mat-icon>
+                </button>
             </td>
         </ng-container>
 
@@ -30,7 +35,14 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <button mat-raised-button color="accent" (click)="enviarSalidas()" [disabled]="itemsSeleccionados.length === 0">
-        Confirmar Salidas
-    </button>
+    <!-- Acciones generales -->
+    <div class="acciones mt-4">
+        <button mat-raised-button color="primary" (click)="confirmarSalida()" [disabled]="!dataSource.data.length">
+            Confirmar salida
+        </button>
+
+        <button mat-raised-button color="warn" (click)="cancelarSalida()" [disabled]="!dataSource.data.length">
+            Cancelar salida
+        </button>
+    </div>
 </div>

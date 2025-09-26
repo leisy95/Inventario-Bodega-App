@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 // Angular Material
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -55,6 +57,8 @@ import { AuditoriaInventarioComponent } from './components/auditoria-inventario/
     InventarioRoutingModule,
 
     // Angular material
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,

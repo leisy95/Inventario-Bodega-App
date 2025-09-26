@@ -4,7 +4,6 @@
     <div class="resumen-grid">
         <mat-card *ngFor="let card of resumen" class="resumen-card" [ngClass]="card.colorClass">
             <mat-card-header>
-                <mat-icon [style.color]="card.color" class="icon">inventario</mat-icon>
                 <mat-card-title>{{ card.titulo }}</mat-card-title>
             </mat-card-header>
             <mat-card-content>
@@ -12,6 +11,27 @@
             </mat-card-content>
         </mat-card>
     </div>
+
+    <!-- Filtros -->
+    <mat-card class="filtro-card">
+        <mat-card-header>
+            <mat-card-title>Filtrar por rango de fechas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field appearance="outline">
+                <mat-label>Rango de fechas</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Fecha inicio" [(ngModel)]="fechaInicio">
+                    <input matEndDate placeholder="Fecha fin" [(ngModel)]="fechaFin">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="aplicarRango()">Aplicar</button>
+            <button mat-stroked-button color="warn" (click)="limpiarRango()">Limpiar</button>
+        </mat-card-content>
+    </mat-card>
 
     <!-- Tabla de Movimientos -->
     <mat-card class="tabla-card">
@@ -27,7 +47,7 @@
             <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
                 <!-- Columnas -->
-                 <ng-container matColumnDef="referencia">
+                <ng-container matColumnDef="referencia">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Referencia </th>
                     <td mat-cell *matCellDef="let m"> {{ m.referencia }} </td>
                 </ng-container>
@@ -57,12 +77,12 @@
                 </ng-container>
 
                 <ng-container matColumnDef="inventario">
-                    <th mat-header-cell *matHeaderCellDef> Refrencia Normal </th>
+                    <th mat-header-cell *matHeaderCellDef> Referencia Normal </th>
                     <td mat-cell *matCellDef="let m"> {{ m.inventarioNombre }} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="item">
-                    <th mat-header-cell *matHeaderCellDef> Refrencia Peso </th>
+                    <th mat-header-cell *matHeaderCellDef> Referencia Peso </th>
                     <td mat-cell *matCellDef="let m"> {{ m.inventarioItemCodigo }} </td>
                 </ng-container>
 

@@ -16,10 +16,11 @@ namespace InventarioBackend.Controllers
             _context = context;
         }
 
-        [HttpGet("all-items")]
+        [HttpGet("entradas-almacen")]
         public async Task<IActionResult> GetAllItems()
         {
             var items = await _context.InventarioItems
+                .Where(i => i.Estado == "EN_ALMACEN")
                 .Select(i => new
                 {
                     i.Id,
@@ -67,75 +68,58 @@ namespace InventarioBackend.Controllers
         public async Task<IActionResult> BuscarFIFO([FromQuery] string referencia)
         {
             if (string.IsNullOrWhiteSpace(referencia))
-                return BadRequest("Debe enviar una referencia base.");
+                return BadRequest(new { message = "Debe enviar una referencia válida." });
 
-            // Buscar el primer item disponible con esa referencia base
+            // Buscar el primer item disponible con esa referencia (FIFO)
             var item = await _context.InventarioItems
                 .Where(i => i.ReferenciaPeso.StartsWith(referencia) && i.Estado == "EN_ALMACEN")
-                .OrderBy(i => i.FechaRegistroItem) // FIFO: el más antiguo primero
+                .OrderBy(i => i.FechaRegistroItem) // FIFO: más antiguo primero
                 .FirstOrDefaultAsync();
 
             if (item == null)
-                return NotFound("No hay más items disponibles con esa referencia.");
+                return NotFound(new { message = "No hay más items disponibles con esa referencia." });
 
-            // También devolvemos cuántos quedan disponibles
+            // Reservar el item para que no lo tome otro usuario
+            item.Estado = "RESERVADO";
+            await _context.SaveChangesAsync();
+
+            // También devolvemos cuántos quedan disponibles aún EN_ALMACEN
             var disponibles = await _context.InventarioItems
                 .CountAsync(i => i.ReferenciaPeso.StartsWith(referencia) && i.Estado == "EN_ALMACEN");
 
             return Ok(new
             {
-                item.Id,
-                item.ReferenciaPeso,
-                item.PesoActual,
-                item.FechaRegistroItem,
-                Disponibles = disponibles
+                id = item.Id,
+                referenciaPeso = item.ReferenciaPeso,
+                pesoActual = item.PesoActual,
+                fechaRegistroItem = item.FechaRegistroItem,
+                disponibles
             });
         }
 
         // Registrar salidas múltiples
         [HttpPost("salidas")]
-        public async Task<IActionResult> DarSalidas([FromBody] List<string> referenciasPeso)
+        public async Task<IActionResult> DarSalidas([FromBody] List<int> ids)
         {
-            if (referenciasPeso == null || !referenciasPeso.Any())
-                return BadRequest(new { message = "No se recibieron referencias." });
+            if (ids == null || !ids.Any())
+                return BadRequest(new { message = "Debe enviar al menos un item para salida." });
 
-            // Agrupamos las referencias que vienen del frontend
-            var refsAgrupadas = referenciasPeso.GroupBy(r => r);
+            var items = await _context.InventarioItems
+                .Where(i => ids.Contains(i.Id) && i.Estado == "RESERVADO")
+                .ToListAsync();
 
-            foreach (var grupo in refsAgrupadas)
+            if (!items.Any())
+                return NotFound(new { message = "No se encontraron items reservados para salida." });
+
+            foreach (var item in items)
             {
-                string refPeso = grupo.Key;
-                int cantidadSolicitada = grupo.Count();
-
-                // Contamos cuántos disponibles hay realmente en el almacén
-                int disponibles = await _context.InventarioItems
-                    .CountAsync(i => i.ReferenciaPeso == refPeso && i.Estado == "EN_ALMACEN");
-
-                if (disponibles < cantidadSolicitada)
-                {
-                    return BadRequest(new
-                    {
-                        message = $"Se solicitaron {cantidadSolicitada} salidas para {refPeso}, " +
-                                  $"pero solo hay {disponibles} disponibles."
-                    });
-                }
-            }
-
-            // Si pasó la validación, procesamos normalmente
-            foreach (var refPeso in referenciasPeso)
-            {
-                var item = await _context.InventarioItems
-                    .FirstOrDefaultAsync(i => i.ReferenciaPeso == refPeso && i.Estado == "EN_ALMACEN");
-
-                if (item == null) continue; // ignorar los que no existan o ya salieron
-
                 var inventario = await _context.Inventarios.FindAsync(item.IdInventario);
                 if (inventario == null) continue;
 
-                // Restar peso al inventario general
+                // Restar peso del inventario general
                 inventario.Peso = Math.Max(0, inventario.Peso - item.PesoActual);
 
-                // Cambiar estado del item
+                // Marcar salida
                 item.Estado = "SALIDA";
 
                 // Registrar movimiento
@@ -146,7 +130,7 @@ namespace InventarioBackend.Controllers
                     Peso = item.PesoActual,
                     Fecha = DateTime.Now,
                     Tipo = "Salida",
-                    Usuario = "Sistema", // luego JWT
+                    Usuario = User.Identity?.Name ?? "Sistema", // Mejor si usas JWT
                     IdInventario = inventario.Id,
                     IdInventarioItem = item.Id
                 };
@@ -155,7 +139,8 @@ namespace InventarioBackend.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Ok(new { message = "Salidas registradas con éxito" });
+
+            return Ok(new { message = $"{items.Count} items dados de salida correctamente." });
         }
 
         [HttpPut("update-peso/{id}")]

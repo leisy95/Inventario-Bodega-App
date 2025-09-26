@@ -13,7 +13,7 @@ export class InventarioItemService {
 
   // Obtener todas las entradas inventarioItem
   getEntradas(): Observable<InventarioItem[]> {
-    return this.http.get<InventarioItem[]>(`${this.apiUrl}/all-items`);
+    return this.http.get<InventarioItem[]>(`${this.apiUrl}/entradas-almacen`);
   }
 
   // Obtener entradas por IdInventario
@@ -41,13 +41,8 @@ export class InventarioItemService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
-  // Salidas de InventarioItem
-  darSalida(id: number): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/salida/${id}`, {});
-  }
-
-  darSalidas(referencias: string[]): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/salidas`, referencias);
+  darSalidas(ids: number[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/salidas`, ids);
   }
 
   buscarItems(referencia: string): Observable<any[]> {

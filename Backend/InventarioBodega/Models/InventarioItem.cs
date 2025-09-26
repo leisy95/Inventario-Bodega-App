@@ -23,7 +23,7 @@ namespace InventarioBackend.Models
         public decimal PesoActual { get; set; } = 0;
 
         [Required]
-        public DateTime FechaRegistroItem { get; set; }
+        public DateTime FechaRegistroItem { get; set; }       
 
         [StringLength(50)]
         public string Estado { get; set; } // Ej: "REGISTRADO", "EN_ALMACEN", "DESPACHADO"

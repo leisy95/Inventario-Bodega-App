@@ -36,6 +36,14 @@ export class MovimientoInventarioService {
     return this.http.get<MovimientoInventario[]>(this.apiUrl);
   }
 
+  getAuditoria(fechaInicio?: string, fechaFin?: string) {
+  let params: any = {};
+  if (fechaInicio) params.fechaInicio = fechaInicio;
+  if (fechaFin) params.fechaFin = fechaFin;
+
+  return this.http.get<any>(`${this.apiUrl}/movimientosinventario/auditoria`, { params });
+}
+
   getResumen() {
   return this.http.get<any>(`${this.apiUrl}/resumen`);
 }

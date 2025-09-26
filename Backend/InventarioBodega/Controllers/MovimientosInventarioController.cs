@@ -106,6 +106,43 @@ namespace InventarioBackend.Controllers
             return Ok(resumen);
         }
 
+        // MOSTRAR DATOS POR RANGOS 
+        [HttpGet("auditoria")]
+        public async Task<IActionResult> GetAuditoria([FromQuery] DateTime? fechaInicio, [FromQuery] DateTime? fechaFin)
+        {
+            var query = _context.MovimientosInventario.AsQueryable();
+
+            if (fechaInicio.HasValue)
+                query = query.Where(m => m.Fecha >= fechaInicio.Value);
+
+            if (fechaFin.HasValue)
+                query = query.Where(m => m.Fecha <= fechaFin.Value);
+
+            var auditoria = new
+            {
+                TotalesPorTipo = await query
+                    .GroupBy(m => m.Tipo)
+                    .Select(g => new { Tipo = g.Key, Total = g.Count() })
+                    .ToListAsync(),
+
+                ReferenciasMasMovidas = await query
+                    .GroupBy(m => m.Referencia)
+                    .Select(g => new { Referencia = g.Key, Total = g.Count() })
+                    .OrderByDescending(x => x.Total)
+                    .Take(5)
+                    .ToListAsync(),
+
+                UsuariosMasActivos = await query
+                    .GroupBy(m => m.Usuario)
+                    .Select(g => new { Usuario = g.Key, Total = g.Count() })
+                    .OrderByDescending(x => x.Total)
+                    .Take(5)
+                    .ToListAsync()
+            };
+
+            return Ok(auditoria);
+        }
+
         // POST: api/MovimientosInventario
         [HttpPost]
         public async Task<ActionResult<MovimientoInventarioResponse>> PostMovimiento(MovimientoInventarioRequest request)

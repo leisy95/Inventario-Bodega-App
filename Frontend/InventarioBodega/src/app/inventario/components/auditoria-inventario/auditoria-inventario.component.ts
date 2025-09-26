@@ -9,7 +9,7 @@ interface ResumenInventario {
   titulo: string;
   cantidad: number;
   valor: number;
-  colorClass: string; 
+  colorClass: string;
 }
 
 @Component({
@@ -23,6 +23,9 @@ export class AuditoriaInventarioComponent implements OnInit {
   dataSource = new MatTableDataSource<MovimientoInventario>();
   displayedColumns: string[] = ['referencia', 'tipo', 'peso', 'fecha', 'usuario', 'inventario', 'item'];
 
+  fechaInicio?: Date;
+  fechaFin?: Date;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -32,29 +35,46 @@ export class AuditoriaInventarioComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Movimientos
-    this.movimientoService.getMovimientos().subscribe({
+    this.cargarMovimientos();
+    this.cargarResumen();
+  }
+
+  cargarMovimientos() {
+    const inicio = this.fechaInicio ? this.fechaInicio.toISOString() : undefined;
+    const fin = this.fechaFin ? this.fechaFin.toISOString() : undefined;
+
+    this.movimientoService.getAuditoria(inicio, fin).subscribe({
       next: (data) => {
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.toastr.success('Movimientos cargados correctamente', 'Éxito');
       },
-      error: () => this.toastr.error('Error al cargar movimientos', 'Error')
+      error: () => this.toastr.error('Error al cargar auditoría', 'Error')
     });
+  }
 
-    // Resumen
+  cargarResumen() {
     this.movimientoService.getResumen().subscribe({
       next: (res) => {
         this.resumen = [
           { titulo: 'Inventario Inicial', cantidad: res.inventarioInicial, valor: 0, colorClass: 'color-azul' },
           { titulo: 'Entradas (Peso)', cantidad: res.entradas, valor: 0, colorClass: 'color-verde' },
-          { titulo: 'Salidas (Ventas)', cantidad: res.salidas, valor: 0, colorClass: 'color-rojo' },
+          { titulo: 'Salidas (Peso)', cantidad: res.salidas, valor: 0, colorClass: 'color-rojo' },
           { titulo: 'Existencias', cantidad: res.existencias, valor: 0, colorClass: 'color-celeste' }
         ];
       },
       error: () => this.toastr.error('Error al cargar resumen', 'Error')
     });
+  }
+
+  aplicarRango() {
+    this.cargarMovimientos();
+  }
+
+  limpiarRango() {
+    this.fechaInicio = undefined;
+    this.fechaFin = undefined;
+    this.cargarMovimientos();
   }
 
   applyFilter(event: Event) {
