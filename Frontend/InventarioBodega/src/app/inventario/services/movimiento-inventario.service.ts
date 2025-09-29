@@ -37,14 +37,14 @@ export class MovimientoInventarioService {
   }
 
   getAuditoria(fechaInicio?: string, fechaFin?: string) {
-  let params: any = {};
-  if (fechaInicio) params.fechaInicio = fechaInicio;
-  if (fechaFin) params.fechaFin = fechaFin;
+    let params: any = {};
+    if (fechaInicio) params.fechaInicio = fechaInicio;
+    if (fechaFin) params.fechaFin = fechaFin;
 
-  return this.http.get<any>(`${this.apiUrl}/movimientosinventario/auditoria`, { params });
-}
+    return this.http.get<any>(`${this.apiUrl}/auditoria`, { params });
+  }
 
   getResumen() {
-  return this.http.get<any>(`${this.apiUrl}/resumen`);
-}
+    return this.http.get<any>(`${this.apiUrl}/resumen`);
+  }
 }

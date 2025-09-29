@@ -58,7 +58,12 @@ table {
   color: #166534;
 }
 
-.estado.despachado {
-  background: #fee2e2;
-  color: #991b1b;
+.btn-eliminar {
+  background-color: var(--color-boton-eliminar);
+  color: var(--color-header-texto) !important;
+  border-radius: 8px;
+  padding: 2px 4px;
+  font-weight: bold;
+  font-size: 12px;
+  min-width: 80px;
 }

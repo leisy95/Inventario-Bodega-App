@@ -1,5 +1,11 @@
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body { 
+  height: 100%; 
+}
+
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
 
 :root {
   /* Colores principales */
@@ -20,15 +26,21 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --color-texto-secundario: #757575;
   --color-texto-titulo: #1e293b;
 
+  /* Colores para clases dinámicas */
+  --color-azul: #1976d2;
+  --color-verde: #388e3c;
+  --color-rojo: #d32f2f;
+  --color-gris: #455a64;  /* reemplazo del amarillo */
+  
   /* Tipografía */
   --fuente-base: 'Roboto', Arial, sans-serif;
   --tamano-texto: 14px;
 }
 
-/*Estilo global para encabezado de tablas con Angular Material*/
+/* Estilo global para encabezado de tablas con Angular Material */
 .mat-mdc-header-cell {
-    background-color: var(--color-header) !important;
-    color: var(--color-header-texto) !important;
-    font-weight: bold;
-    text-align: center;
+  background-color: var(--color-header) !important;
+  color: var(--color-header-texto) !important;
+  font-weight: bold;
+  text-align: center;
 }

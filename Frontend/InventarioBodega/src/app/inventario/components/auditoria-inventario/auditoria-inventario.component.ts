@@ -1,16 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ToastrService } from 'ngx-toastr';
-import { MovimientoInventario, MovimientoInventarioService } from '../../services/movimiento-inventario.service';
-
-interface ResumenInventario {
-  titulo: string;
-  cantidad: number;
-  valor: number;
-  colorClass: string;
-}
+import { MovimientoInventarioService } from '../../services/movimiento-inventario.service';
 
 @Component({
   selector: 'app-auditoria-inventario',
@@ -19,66 +11,98 @@ interface ResumenInventario {
 })
 export class AuditoriaInventarioComponent implements OnInit {
 
-  resumen: ResumenInventario[] = [];
-  dataSource = new MatTableDataSource<MovimientoInventario>();
-  displayedColumns: string[] = ['referencia', 'tipo', 'peso', 'fecha', 'usuario', 'inventario', 'item'];
+  resumenInventario: any[] = [];
+  totalesPorTipo: any[] = [];
+  referenciasMasMovidas: any[] = [];
+  usuariosMasActivos: any[] = [];
 
-  fechaInicio?: Date;
-  fechaFin?: Date;
+  dataSource = new MatTableDataSource<any>([]);
+  displayedColumns: string[] = ['referencia', 'tipo', 'peso', 'fecha', 'usuario'];
+
+  fechaInicio: Date | null = null;
+  fechaFin: Date | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(
-    private movimientoService: MovimientoInventarioService,
-    private toastr: ToastrService
-  ) { }
+  constructor(private movimientoService: MovimientoInventarioService) { }
 
   ngOnInit(): void {
-    this.cargarMovimientos();
-    this.cargarResumen();
+    this.cargarAuditoria();
   }
 
-  cargarMovimientos() {
-    const inicio = this.fechaInicio ? this.fechaInicio.toISOString() : undefined;
-    const fin = this.fechaFin ? this.fechaFin.toISOString() : undefined;
+  // Formatea fecha a 'YYYY-MM-DD' para enviar al backend
+  private formatDate(date: Date | null): string | undefined {
+    if (!date) return undefined;
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
 
-    this.movimientoService.getAuditoria(inicio, fin).subscribe({
-      next: (data) => {
-        this.dataSource.data = data;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      },
-      error: () => this.toastr.error('Error al cargar auditoría', 'Error')
+  // =========================
+  // Cargar todo: tabla, resumen y reportes
+  // =========================
+  cargarAuditoria(): void {
+    const inicio = this.formatDate(this.fechaInicio);
+    const fin = this.formatDate(this.fechaFin);
+
+    this.movimientoService.getAuditoria(inicio, fin).subscribe((data: any) => {
+      // 1️⃣ Resumen de inventario
+      const resumenData = data.resumen;
+      this.resumenInventario = [
+        { titulo: 'Total Referencias', cantidad: resumenData.inventarioInicial?.cantidad || 0, colorClass: 'color-gris' },
+        { titulo: 'Entradas-Peso', cantidad: resumenData.entradas?.cantidad || 0, peso: resumenData.entradas?.peso || 0, colorClass: 'color-verde' },
+        { titulo: 'Salidas-Peso', cantidad: resumenData.salidas?.cantidad || 0, peso: resumenData.salidas?.peso || 0, colorClass: 'color-rojo' },
+        { titulo: 'Existencias', cantidad: resumenData.existencias?.cantidad || 0, peso: resumenData.existencias?.peso || 0, colorClass: 'color-azul' },
+      ];
+
+      // 2️⃣ Totales por tipo
+      this.totalesPorTipo = data.totalesPorTipo || [];
+
+      // 3️⃣ Referencias más movidas
+      this.referenciasMasMovidas = data.referenciasMasMovidas || [];
+
+      // 4️⃣ Usuarios más activos
+      this.usuariosMasActivos = data.usuariosMasActivos || [];
+
+      // 5️⃣ Tabla de movimientos
+      this.dataSource = new MatTableDataSource(data.movimientos || []);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 
-  cargarResumen() {
-    this.movimientoService.getResumen().subscribe({
-      next: (res) => {
-        this.resumen = [
-          { titulo: 'Inventario Inicial', cantidad: res.inventarioInicial, valor: 0, colorClass: 'color-azul' },
-          { titulo: 'Entradas (Peso)', cantidad: res.entradas, valor: 0, colorClass: 'color-verde' },
-          { titulo: 'Salidas (Peso)', cantidad: res.salidas, valor: 0, colorClass: 'color-rojo' },
-          { titulo: 'Existencias', cantidad: res.existencias, valor: 0, colorClass: 'color-celeste' }
-        ];
-      },
-      error: () => this.toastr.error('Error al cargar resumen', 'Error')
-    });
+  // =========================
+  // Aplicar rango de fechas
+  // =========================
+  aplicarRango(): void {
+    this.cargarAuditoria();
   }
 
-  aplicarRango() {
-    this.cargarMovimientos();
+  // =========================
+  // Limpiar rango de fechas
+  // =========================
+  limpiarRango(): void {
+    this.fechaInicio = null;
+    this.fechaFin = null;
+    this.cargarAuditoria();
   }
 
-  limpiarRango() {
-    this.fechaInicio = undefined;
-    this.fechaFin = undefined;
-    this.cargarMovimientos();
-  }
-
-  applyFilter(event: Event) {
+  // =========================
+  // Filtrar tabla por texto
+  // =========================
+  applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  // =========================
+  // Filtrado automático al cambiar rango de fechas
+  // =========================
+  rangoCambiado(event: any): void {
+    if (this.fechaInicio && this.fechaFin) {
+      this.cargarAuditoria();
+    }
   }
 }

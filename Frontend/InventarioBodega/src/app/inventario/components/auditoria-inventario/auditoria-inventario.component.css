@@ -1,103 +1,204 @@
+/* Contenedor Principal */
 .auditoria-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 16px;
+    gap: 2rem;
+    padding: 2rem;
+    background: #f4f6f9;
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
 }
 
-/* ===== Resumen ===== */
-.resumen-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
+/* Resumen Tarjetas */
+.resumen-inventario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 20px;
+    justify-content: center;
 }
 
-.resumen-card {
-    text-align: center;
-    padding: 16px;
-    border-radius: 12px;
+.card {
+    flex: 1 1 180px;
+    max-width: 220px;
+    padding: 24px;
+    border-radius: 18px;
     color: white;
-}
-
-.resumen-card mat-card-title {
-    font-size: 16px;
     font-weight: 600;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
 }
 
-.resumen-card mat-card-content h2 {
-    font-size: 28px;
-    font-weight: bold;
-    margin: 0;
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
 }
 
-/* Colores */
-.color-azul {
-    background: linear-gradient(135deg, #1976d2, #42a5f5);
+/* Gradientes profesionales y elegantes */
+.color-gris {
+    background: linear-gradient(145deg, rgba(108, 117, 125, 0.85), rgba(73, 80, 87, 0.85));
 }
 
 .color-verde {
-    background: linear-gradient(135deg, #2e7d32, #66bb6a);
+    background: linear-gradient(145deg, rgba(45, 106, 79, 0.85), rgba(27, 67, 50, 0.85));
 }
 
 .color-rojo {
-    background: linear-gradient(135deg, #c62828, #ef5350);
+    background: linear-gradient(145deg, rgba(164, 22, 26, 0.85), rgba(106, 4, 15, 0.85));
 }
 
-.color-celeste {
-    background: linear-gradient(135deg, #00838f, #26c6da);
+.color-amarillo {
+    background: linear-gradient(145deg, rgba(255, 183, 3, 0.85), rgba(244, 140, 6, 0.85));
+    color: #1a1a1a;
 }
 
-/* ===== Filtros ===== */
+.color-azul {
+    background: linear-gradient(145deg, rgba(29, 53, 87, 0.85), rgba(69, 123, 157, 0.85));
+}
+
+/* Tipografía jerarquizada dentro de la tarjeta */
+.card .titulo {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    opacity: 0.85;
+    letter-spacing: 0.5px;
+}
+
+.card .valor {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Mini Reportes */
+.mini-reportes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.mini-reportes-grid mat-card {
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.mini-reportes-grid mat-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #444;
+}
+
+.mini-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mini-tabla td {
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 0.9rem;
+}
+
+.mini-tabla tr:last-child td {
+    border-bottom: none;
+}
+
+/* Filtros */
 .filtro-card {
-    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: #fff;
 }
 
-.filtro-card mat-form-field {
-    margin-right: 16px;
-    min-width: 250px;
+/* Botones */
+button.mat-raised-button {
+    border-radius: 0.6rem;
+    font-weight: 500;
+    padding: 0.4rem 1.2rem;
+    text-transform: none;
 }
 
-/* ===== Tabla ===== */
+/* Tabla de Movimientos */
 .tabla-card {
-    padding: 16px;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    background: #fff;
+}
+
+.tabla-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.tabla-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #37474f;
+}
+
+.tabla-header .filtro {
+    width: 250px;
 }
 
 .tabla-container {
     overflow-x: auto;
 }
 
-th.mat-header-cell {
-    background: #f5f5f5;
+/* Estilo tabla Angular Material */
+.mat-mdc-table {
+    width: 100%;
+    border-radius: 0.6rem;
+    overflow: hidden;
+}
+
+.mat-mdc-header-row {
+    background: #eceff1;
     font-weight: 600;
-    color: #333;
 }
 
-td.mat-cell,
-th.mat-header-cell {
-    padding: 12px;
+.mat-mdc-header-cell {
+    color: #37474f;
+    font-size: 0.95rem;
 }
 
-/* ===== Chips Tipo ===== */
+.mat-mdc-cell {
+    font-size: 0.9rem;
+    color: #555;
+    padding: 0.8rem;
+}
+
+/* Etiquetas de tipo */
 .entrada {
-    background: #e8f5e9;
     color: #2e7d32;
-    padding: 4px 10px;
-    border-radius: 16px;
     font-weight: 600;
-    font-size: 13px;
 }
 
 .salida {
-    background: #ffebee;
     color: #c62828;
-    padding: 4px 10px;
-    border-radius: 16px;
     font-weight: 600;
-    font-size: 13px;
 }
 
-/* ===== Buscador ===== */
-.filtro {
-    margin-left: auto;
-    min-width: 250px;
+/* Paginador */
+.mat-mdc-paginator {
+    border-top: 1px solid #eee;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
 }

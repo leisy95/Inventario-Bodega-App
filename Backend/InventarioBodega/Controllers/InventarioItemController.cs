@@ -220,6 +220,8 @@ namespace InventarioBackend.Controllers
                     inventario.Peso = Math.Max(0, inventario.Peso - item.PesoActual);
                 }
 
+                inventario.Peso = Math.Max(0, inventario.Peso - item.PesoActual);
+
                 // Registrar movimiento en histórico
                 var movimiento = new MovimientoInventario
                 {

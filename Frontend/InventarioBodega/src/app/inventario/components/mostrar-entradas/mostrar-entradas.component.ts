@@ -59,32 +59,6 @@ export class MostrarEntradasComponent implements OnInit, AfterViewInit {
     }
   }
 
-  editarItem(item: InventarioItem): void {
-    const dialogRef = this.dialog.open(EditarEntradaPesoComponent, {
-      width: '400px',
-      data: { pesoActual: item.pesoActual }
-    });
-
-    dialogRef.afterClosed().subscribe(nuevoPeso => {
-      if (nuevoPeso != null) {
-        this.inventarioItemService.updatePesoEntrada(item.id, nuevoPeso).subscribe({
-          next: (res) => {
-            // Actualizar directamente el peso en la tabla
-            const idx = this.dataSource.data.findIndex(i => i.id === item.id);
-            if (idx !== -1) {
-              this.dataSource.data[idx].pesoActual = nuevoPeso;
-              this.dataSource._updateChangeSubscription();
-            }
-            this.toastr.success('Peso actualizado correctamente', 'Éxito');
-          },
-          error: (err) => {
-            this.toastr.error(err.error, 'Error');
-          }
-        });
-      }
-    });
-  }
-
   eliminarItem(id: number): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: '¿Seguro que quieres eliminar esta entrada?' },
@@ -93,13 +67,16 @@ export class MostrarEntradasComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(confirm => {
       if (confirm) {
-        this.inventarioItemService.deleteEntrada(id).subscribe({
+        // Llamar al endpoint de salidas en lugar de delete
+        this.inventarioItemService.darSalidas([id]).subscribe({
           next: (res) => {
-            this.dataSource.data = this.dataSource.data.filter(item => item.id !== id);
-            this.toastr.success(res.message || 'Entrada eliminada', 'Éxito');
+            // Recargar entradas para reflejar el peso actualizado
+            this.cargarEntradas();
+
+            this.toastr.success(res.message || 'Entrada dada de salida correctamente', 'Éxito');
           },
           error: (err) => {
-            this.toastr.error(err.error, 'Error');
+            this.toastr.error(err.error?.message || 'Error al dar salida', 'Error');
           }
         });
       }

@@ -72,40 +72,6 @@ namespace InventarioBackend.Controllers
             return Ok(movimiento);
         }
 
-        // Items inicial auditoria
-        [HttpGet("resumen")]
-        public async Task<ActionResult<object>> GetResumen()
-        {
-            var inventarioInicial = await _context.MovimientosInventario
-                .Where(m => m.Tipo == "Inicial")
-                .SumAsync(m => m.Peso);
-
-            var entradas = await _context.MovimientosInventario
-                .Where(m => m.Tipo == "Entrada")
-                .SumAsync(m => m.Peso);
-
-            var salidas = await _context.MovimientosInventario
-                .Where(m => m.Tipo == "Salida")
-                .SumAsync(m => m.Peso);
-
-            var ajustes = await _context.MovimientosInventario
-                .Where(m => m.Tipo == "Ajuste")
-                .SumAsync(m => m.Peso);
-
-            var existencias = inventarioInicial + entradas - salidas + ajustes;
-
-            var resumen = new
-            {
-                InventarioInicial = inventarioInicial,
-                Entradas = entradas,
-                Salidas = salidas,
-                Ajustes = ajustes,
-                Existencias = existencias
-            };
-
-            return Ok(resumen);
-        }
-
         // MOSTRAR DATOS POR RANGOS 
         [HttpGet("auditoria")]
         public async Task<IActionResult> GetAuditoria([FromQuery] DateTime? fechaInicio, [FromQuery] DateTime? fechaFin)
@@ -113,31 +79,74 @@ namespace InventarioBackend.Controllers
             var query = _context.MovimientosInventario.AsQueryable();
 
             if (fechaInicio.HasValue)
-                query = query.Where(m => m.Fecha >= fechaInicio.Value);
+                query = query.Where(m => m.Fecha >= fechaInicio.Value.Date); // inicio del día
 
             if (fechaFin.HasValue)
-                query = query.Where(m => m.Fecha <= fechaFin.Value);
+                query = query.Where(m => m.Fecha <= fechaFin.Value.Date.AddDays(1).AddTicks(-1)); // fin del día
 
+            // Traemos todos los movimientos filtrados
+            var movimientosList = await query
+                .Select(m => new
+                {
+                    referencia = m.Referencia,
+                    referenciaPeso = m.ReferenciaPeso,
+                    tipo = m.Tipo,
+                    peso = m.Peso,
+                    fecha = m.Fecha,
+                    usuario = m.Usuario
+                })
+                .OrderByDescending(m => m.fecha)
+                .ToListAsync();
+
+            // Resumen de inventario
+            var inventarioInicial = movimientosList.Where(m => m.tipo == "Inicial").ToList();
+            var entradas = movimientosList.Where(m => m.tipo == "Entrada").ToList();
+            var salidas = movimientosList.Where(m => m.tipo == "Salida").ToList();
+
+            var resumen = new
+            {
+                InventarioInicial = new { Cantidad = inventarioInicial.Count, Peso = inventarioInicial.Sum(x => x.peso) },
+                Entradas = new { Cantidad = entradas.Count, Peso = entradas.Sum(x => x.peso) },
+                Salidas = new { Cantidad = salidas.Count, Peso = salidas.Sum(x => x.peso) },
+                Existencias = new
+                {
+                    Cantidad = inventarioInicial.Count + entradas.Count - salidas.Count,
+                    Peso = inventarioInicial.Sum(x => x.peso) + entradas.Sum(x => x.peso) - salidas.Sum(x => x.peso)
+                }
+            };
+
+            // Totales por tipo
+            var totalesPorTipo = movimientosList
+                .GroupBy(m => m.tipo)
+                .Select(g => new { tipo = g.Key, total = g.Count() })
+                .OrderByDescending(x => x.total)
+                .Take(5)
+                .ToList();
+
+            // Referencias más movidas
+            var referenciasMasMovidas = movimientosList
+                .GroupBy(m => m.referencia)
+                .Select(g => new { referencia = g.Key, total = g.Count() })
+                .OrderByDescending(x => x.total)
+                .Take(5)
+                .ToList();
+
+            // Usuarios más activos
+            var usuariosMasActivos = movimientosList
+                .GroupBy(m => m.usuario)
+                .Select(g => new { usuario = g.Key, total = g.Count() })
+                .OrderByDescending(x => x.total)
+                .Take(5)
+                .ToList();
+
+            // Respuesta combinada
             var auditoria = new
             {
-                TotalesPorTipo = await query
-                    .GroupBy(m => m.Tipo)
-                    .Select(g => new { Tipo = g.Key, Total = g.Count() })
-                    .ToListAsync(),
-
-                ReferenciasMasMovidas = await query
-                    .GroupBy(m => m.Referencia)
-                    .Select(g => new { Referencia = g.Key, Total = g.Count() })
-                    .OrderByDescending(x => x.Total)
-                    .Take(5)
-                    .ToListAsync(),
-
-                UsuariosMasActivos = await query
-                    .GroupBy(m => m.Usuario)
-                    .Select(g => new { Usuario = g.Key, Total = g.Count() })
-                    .OrderByDescending(x => x.Total)
-                    .Take(5)
-                    .ToListAsync()
+                resumen,
+                movimientos = movimientosList,
+                totalesPorTipo,
+                referenciasMasMovidas,
+                usuariosMasActivos
             };
 
             return Ok(auditoria);
