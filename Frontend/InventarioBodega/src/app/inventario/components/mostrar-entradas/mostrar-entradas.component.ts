@@ -67,16 +67,13 @@ export class MostrarEntradasComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(confirm => {
       if (confirm) {
-        // Llamar al endpoint de salidas en lugar de delete
-        this.inventarioItemService.darSalidas([id]).subscribe({
+        this.inventarioItemService.eliminarEntrada(id).subscribe({
           next: (res) => {
-            // Recargar entradas para reflejar el peso actualizado
-            this.cargarEntradas();
-
-            this.toastr.success(res.message || 'Entrada dada de salida correctamente', 'Éxito');
+            this.cargarEntradas(); // refrescar la tabla
+            this.toastr.success(res.message || 'Entrada eliminada correctamente', 'Éxito');
           },
           error: (err) => {
-            this.toastr.error(err.error?.message || 'Error al dar salida', 'Error');
+            this.toastr.error(err.error || 'Error al eliminar la entrada', 'Error');
           }
         });
       }

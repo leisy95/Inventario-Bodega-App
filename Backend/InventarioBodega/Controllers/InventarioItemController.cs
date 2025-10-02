@@ -73,7 +73,7 @@ namespace InventarioBackend.Controllers
             // Buscar el primer item disponible con esa referencia (FIFO)
             var item = await _context.InventarioItems
                 .Where(i => i.ReferenciaPeso.StartsWith(referencia) && i.Estado == "EN_ALMACEN")
-                .OrderBy(i => i.FechaRegistroItem) // FIFO: más antiguo primero
+                .OrderBy(i => i.FechaRegistroItem) 
                 .FirstOrDefaultAsync();
 
             if (item == null)
@@ -130,7 +130,7 @@ namespace InventarioBackend.Controllers
                     Peso = item.PesoActual,
                     Fecha = DateTime.Now,
                     Tipo = "Salida",
-                    Usuario = User.Identity?.Name ?? "Sistema", // Mejor si usas JWT
+                    Usuario = User.Identity?.Name ?? "Sistema", 
                     IdInventario = inventario.Id,
                     IdInventarioItem = item.Id
                 };
@@ -143,62 +143,6 @@ namespace InventarioBackend.Controllers
             return Ok(new { message = $"{items.Count} items dados de salida correctamente." });
         }
 
-        [HttpPut("update-peso/{id}")]
-        public async Task<IActionResult> UpdatePeso(int id, [FromBody] EditarPesoRequest request)
-        {
-            if (request == null)
-                return BadRequest("Datos inválidos.");
-
-            var item = await _context.InventarioItems.FindAsync(id);
-            if (item == null)
-                return NotFound("Item no encontrado.");
-
-            if (item.Estado != "EN_ALMACEN")
-                return BadRequest("Solo se pueden editar items con estado EN_ALMACEN.");
-
-            var inventario = await _context.Inventarios.FindAsync(item.IdInventario);
-            if (inventario == null)
-                return NotFound("Inventario general no encontrado.");
-
-            var pesoAntiguo = item.PesoActual;
-            var diferenciaPeso = request.PesoActual - pesoAntiguo;
-
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                // Actualizar item
-                item.PesoActual = request.PesoActual;
-
-                // Ajustar inventario general
-                inventario.Peso = Math.Max(0, inventario.Peso + diferenciaPeso);
-
-                // Registrar movimiento histórico
-                var movimiento = new MovimientoInventario
-                {
-                    Referencia = inventario.ReferenciaNormalizada,
-                    ReferenciaPeso = item.ReferenciaPeso,
-                    Peso = request.PesoActual,
-                    Fecha = DateTime.UtcNow,
-                    Tipo = $"Modificación Peso ({pesoAntiguo} → {request.PesoActual})",
-                    Usuario = User?.Identity?.Name ?? "Sistema",
-                    IdInventario = inventario.Id,
-                    IdInventarioItem = item.Id
-                };
-                _context.MovimientosInventario.Add(movimiento);
-
-                // Guardar cambios
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                return Ok(new { message = "Peso actualizado, inventario ajustado y movimiento registrado" });
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                return StatusCode(500, $"Error interno: {ex.Message}");
-            }
-        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(int id)
         {
@@ -209,34 +153,29 @@ namespace InventarioBackend.Controllers
             if (item.Estado != "EN_ALMACEN")
                 return BadRequest("Solo se pueden eliminar registros con estado EN_ALMACEN.");
 
-            // Usar transacción para mantener consistencia
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // Ajustar peso del inventario general (si existe)
                 var inventario = await _context.Inventarios.FindAsync(item.IdInventario);
                 if (inventario != null)
                 {
                     inventario.Peso = Math.Max(0, inventario.Peso - item.PesoActual);
+                    inventario.Cantidad = Math.Max(0, inventario.Cantidad - 1); 
                 }
 
-                inventario.Peso = Math.Max(0, inventario.Peso - item.PesoActual);
-
-                // Registrar movimiento en histórico
                 var movimiento = new MovimientoInventario
                 {
-                    Referencia = inventario.ReferenciaNormalizada,
+                    Referencia = inventario?.ReferenciaNormalizada,
                     ReferenciaPeso = item.ReferenciaPeso,
                     Peso = item.PesoActual,
                     Fecha = DateTime.UtcNow,
-                    Tipo = "Eliminación",
-                    Usuario = User?.Identity?.Name ?? "Sistema", // sustituye por el usuario real si usas JWT
+                    Tipo = "Eliminado",
+                    Usuario = User?.Identity?.Name ?? "Sistema",
                     IdInventario = inventario?.Id ?? 0,
                     IdInventarioItem = item.Id
                 };
                 _context.MovimientosInventario.Add(movimiento);
 
-                // Soft delete: marcar como eliminado en vez de remover
                 item.Estado = "ELIMINADO";
 
                 await _context.SaveChangesAsync();
@@ -244,10 +183,9 @@ namespace InventarioBackend.Controllers
 
                 return Ok(new { message = "Item marcado como eliminado y movimiento registrado" });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await transaction.RollbackAsync();
-                // Aquí puedes loguear el error (ex) según tu logger
                 return StatusCode(500, "Error interno al intentar eliminar el item.");
             }
         }

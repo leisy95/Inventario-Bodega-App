@@ -85,7 +85,7 @@ namespace InventarioBackend.Controllers
             // Crear registro histórico de movimiento
             var nuevoMovimiento = new MovimientoInventario
             {
-                Referencia = producto.Referencia,
+                Referencia = producto.ReferenciaNormalizada,
                 ReferenciaPeso = nuevoItem.ReferenciaPeso,
                 Peso = input.Peso,
                 Fecha = DateTime.Now,
@@ -142,10 +142,7 @@ namespace InventarioBackend.Controllers
                     Peso = 0,
                     Cantidad = 0,
 
-                    ReferenciaNormalizada = request.Referencia?
-                           .Replace(".", "")
-                           .Replace("*", "")
-                           .ToUpper()
+                    ReferenciaNormalizada = ReferenciaHelper.Normalize(request.Referencia)
                 };
 
                 _context.Inventarios.Add(inventario);

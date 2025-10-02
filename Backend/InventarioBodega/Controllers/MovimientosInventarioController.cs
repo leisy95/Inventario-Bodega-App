@@ -36,15 +36,15 @@ namespace InventarioBackend.Controllers
                     Fecha = m.Fecha,
                     Tipo = m.Tipo,
                     Usuario = m.Usuario,
-                    InventarioNombre = m.Inventario.Referencia,       // 🔹 Nombre del inventario
-                    InventarioItemCodigo = m.InventarioItem.ReferenciaPeso // 🔹 Código del item
+                    InventarioNombre = m.Inventario.Referencia,   
+                    InventarioItemCodigo = m.InventarioItem.ReferenciaPeso 
                 })
                 .ToListAsync();
 
             return Ok(movimientos);
         }
 
-        // GET: api/MovimientosInventario/5
+        // GET: api/MovimientosInventario/
         [HttpGet("{id}")]
         public async Task<ActionResult<MovimientoInventarioResponse>> GetMovimiento(int id)
         {
@@ -79,10 +79,10 @@ namespace InventarioBackend.Controllers
             var query = _context.MovimientosInventario.AsQueryable();
 
             if (fechaInicio.HasValue)
-                query = query.Where(m => m.Fecha >= fechaInicio.Value.Date); // inicio del día
+                query = query.Where(m => m.Fecha >= fechaInicio.Value.Date); 
 
             if (fechaFin.HasValue)
-                query = query.Where(m => m.Fecha <= fechaFin.Value.Date.AddDays(1).AddTicks(-1)); // fin del día
+                query = query.Where(m => m.Fecha <= fechaFin.Value.Date.AddDays(1).AddTicks(-1)); 
 
             // Traemos todos los movimientos filtrados
             var movimientosList = await query
@@ -102,16 +102,28 @@ namespace InventarioBackend.Controllers
             var inventarioInicial = movimientosList.Where(m => m.tipo == "Inicial").ToList();
             var entradas = movimientosList.Where(m => m.tipo == "Entrada").ToList();
             var salidas = movimientosList.Where(m => m.tipo == "Salida").ToList();
+            var eliminados = movimientosList.Where(m => m.tipo == "Eliminado").ToList();
+
+            // Existencias calculadas desde la tabla InventarioItems
+            var existencias = await _context.InventarioItems
+                .Where(i => i.Estado == "EN_ALMACEN")
+                .GroupBy(i => 1)
+                .Select(g => new {
+                    Cantidad = g.Count(),
+                    Peso = g.Sum(x => x.PesoActual)
+                })
+                .FirstOrDefaultAsync();
 
             var resumen = new
             {
                 InventarioInicial = new { Cantidad = inventarioInicial.Count, Peso = inventarioInicial.Sum(x => x.peso) },
                 Entradas = new { Cantidad = entradas.Count, Peso = entradas.Sum(x => x.peso) },
                 Salidas = new { Cantidad = salidas.Count, Peso = salidas.Sum(x => x.peso) },
+                Eliminados = new { Cantidad = eliminados.Count, Peso = eliminados.Sum(x => x.peso) },
                 Existencias = new
                 {
-                    Cantidad = inventarioInicial.Count + entradas.Count - salidas.Count,
-                    Peso = inventarioInicial.Sum(x => x.peso) + entradas.Sum(x => x.peso) - salidas.Sum(x => x.peso)
+                    Cantidad = existencias?.Cantidad ?? 0,
+                    Peso = existencias?.Peso ?? 0
                 }
             };
 

@@ -175,7 +175,7 @@ namespace TuProyecto.Controllers
                 // Registrar movimiento
                 var movimiento = new MovimientoInventario
                 {
-                    Referencia = inventario?.Referencia ?? item.ReferenciaPeso,
+                    Referencia = inventario?.ReferenciaNormalizada ?? item.ReferenciaPeso,
                     ReferenciaPeso = item.ReferenciaPeso,
                     Peso = item.PesoActual,
                     Fecha = DateTime.Now,

@@ -14,15 +14,16 @@
 .resumen-inventario {
     display: flex;
     flex-wrap: wrap;
-    gap: 24px;
+    gap: 16px;
     margin-bottom: 20px;
-    justify-content: center;
+    justify-content: space-around;
 }
 
 .card {
-    flex: 1 1 180px;
+    flex: 1 1 200px;
     max-width: 220px;
-    padding: 24px;
+    min-width: 180px;
+    padding: 20px;
     border-radius: 18px;
     color: white;
     font-weight: 600;

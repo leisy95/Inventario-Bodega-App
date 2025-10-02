@@ -12,10 +12,10 @@ namespace InventarioBackend.Models
         public int Id { get; set; }
 
         [ForeignKey("Inventario")]
-        public int IdInventario { get; set; } // Clave foránea a IdInvenatrio
+        public int IdInventario { get; set; } 
 
         
-        public Inventario Inventario { get; set; } // Propiedad de navegación
+        public Inventario Inventario { get; set; } 
         [StringLength(200)]
         public string ReferenciaPeso { get; set; }
 
@@ -26,8 +26,7 @@ namespace InventarioBackend.Models
         public DateTime FechaRegistroItem { get; set; }       
 
         [StringLength(50)]
-        public string Estado { get; set; } // Ej: "REGISTRADO", "EN_ALMACEN", "DESPACHADO"
-        // Propiedad de navegación para la relación uno a muchos con MovimientoInventario
+        public string Estado { get; set; } 
         public ICollection<MovimientoInventario> Movimientos { get; set; } = new List<MovimientoInventario>();
     }
 }

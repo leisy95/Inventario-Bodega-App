@@ -12,11 +12,11 @@ namespace InventarioBackend.Models
 
         [Required]
         [MaxLength(50)]
-        public string Referencia { get; set; } // Ej: 1R0BL003004
+        public string Referencia { get; set; } 
 
         [Required]
         [MaxLength(60)]
-        public string ReferenciaPeso { get; set; } // Ej: 1R0BL0030044
+        public string ReferenciaPeso { get; set; } 
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Peso { get; set; }
@@ -26,17 +26,15 @@ namespace InventarioBackend.Models
 
         [Required]
         [MaxLength(100)]
-        public string Tipo { get; set; } // "Entrada" | "Salida"
+        public string Tipo { get; set; } 
 
         [MaxLength(100)]
         public string Usuario { get; set; }
 
-        // Relación con Inventario (general)
         [ForeignKey("Inventario")]
         public int IdInventario { get; set; }
         public Inventario Inventario { get; set; }
 
-        // Relación con InventarioItem (paquete exacto)
         [ForeignKey("InventarioItem")]
         public int IdInventarioItem { get; set; }
         public InventarioItem InventarioItem { get; set; }
