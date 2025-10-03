@@ -16,6 +16,7 @@ namespace InventarioBackend.Data
         public DbSet<MovimientoInventario> MovimientosInventario { get; set; }
         public DbSet<Salida> Salidas { get; set; }
         public DbSet<SalidaItem> SalidaItems { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

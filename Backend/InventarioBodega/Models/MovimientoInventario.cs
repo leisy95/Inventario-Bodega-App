@@ -38,5 +38,10 @@ namespace InventarioBackend.Models
         [ForeignKey("InventarioItem")]
         public int IdInventarioItem { get; set; }
         public InventarioItem InventarioItem { get; set; }
+
+        // Relación con Cliente (opcional, solo en salidas)
+        [ForeignKey("Cliente")]
+        public int? ClienteId { get; set; }
+        public Cliente Cliente { get; set; }
     }
 }

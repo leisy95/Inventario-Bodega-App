@@ -33,6 +33,7 @@ import { EditarEntradaPesoComponent } from './components/editar-entrada-peso/edi
 import { BuscarSalidasComponent } from './components/buscar-salidas/buscar-salidas.component';
 import { RegistrarEntradaPesoComponent } from './components/registrar-entrada-peso/registrar-entrada-peso.component';
 import { AuditoriaInventarioComponent } from './components/auditoria-inventario/auditoria-inventario.component';
+import { ClientesComponent } from './components/clientes/clientes.component';
 
 // Componentes inventario
 
@@ -48,6 +49,7 @@ import { AuditoriaInventarioComponent } from './components/auditoria-inventario/
     EditarEntradaPesoComponent,
     BuscarSalidasComponent,
     AuditoriaInventarioComponent,
+    ClientesComponent,
   ],
   imports: [
     CommonModule,

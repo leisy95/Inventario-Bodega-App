@@ -13,6 +13,10 @@
         public DateTime? FechaSalida { get; set; }
         public DateTime? FechaCancelacion { get; set; }
 
+        // Relación con Cliente
+        public int? ClienteId { get; set; }
+        public Cliente Cliente { get; set; }
+
         // Relación con items
         public ICollection<SalidaItem> Items { get; set; } = new List<SalidaItem>();
     }

@@ -1,0 +1,58 @@
+<h2>Gestión de Clientes</h2>
+
+<form (ngSubmit)="crearCliente()" class="form-container">
+    <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="cliente.nombre" name="nombre" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Dirección</mat-label>
+        <input matInput [(ngModel)]="cliente.direccion" name="direccion">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Teléfono</mat-label>
+        <input matInput [(ngModel)]="cliente.telefono" name="telefono">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="cliente.email" name="email">
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">
+        Agregar Cliente
+    </button>
+</form>
+
+<table mat-table [dataSource]="clientes" class="mat-elevation-z8" style="margin-top:20px; width: 100%;">
+
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let cliente">{{cliente.id}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let cliente">{{cliente.nombre}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="direccion">
+        <th mat-header-cell *matHeaderCellDef>Dirección</th>
+        <td mat-cell *matCellDef="let cliente">{{cliente.direccion}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+        <td mat-cell *matCellDef="let cliente">{{cliente.telefono}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let cliente">{{cliente.email}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

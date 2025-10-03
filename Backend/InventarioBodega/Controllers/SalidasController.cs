@@ -1,4 +1,5 @@
 ﻿using InventarioBackend.Data;
+using InventarioBackend.DTOs;
 using InventarioBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -151,7 +152,7 @@ namespace TuProyecto.Controllers
 
         // Confirmar salida
         [HttpPost("{idSalida}/confirmar")]
-        public async Task<IActionResult> ConfirmarSalida(int idSalida)
+        public async Task<IActionResult> ConfirmarSalida(int idSalida, [FromBody] ConfirmarSalidaRequest request)
         {
             var salida = await _context.Salidas
                 .Include(s => s.Items)
@@ -160,6 +161,13 @@ namespace TuProyecto.Controllers
 
             if (salida == null)
                 return BadRequest(new { message = "No se encontró la salida o ya fue confirmada." });
+
+            // Asignar cliente a la salida
+            var cliente = await _context.Clientes.FindAsync(request.ClienteId);
+            if (cliente == null)
+                return BadRequest(new { message = "Cliente no encontrado." });
+
+            salida.ClienteId = request.ClienteId;
 
             foreach (var si in salida.Items)
             {
@@ -182,7 +190,8 @@ namespace TuProyecto.Controllers
                     Tipo = "Salida",
                     Usuario = UsuarioActual,
                     IdInventario = item.IdInventario,
-                    IdInventarioItem = item.Id
+                    IdInventarioItem = item.Id,
+                    ClienteId = request.ClienteId
                 };
 
                 _context.MovimientosInventario.Add(movimiento);
