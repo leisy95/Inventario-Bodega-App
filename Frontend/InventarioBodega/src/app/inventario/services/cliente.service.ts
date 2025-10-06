@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CrearCliente } from '../models/cliente.model';
 
 export interface Cliente {
     id?: number;
+    nombre: string;
+    direccion?: string;
+    telefono?: string;
+    email?: string;
+}
+
+export interface EditarClienteRequest {
     nombre: string;
     direccion?: string;
     telefono?: string;
@@ -34,5 +40,13 @@ export class ClienteService {
     // Obtener cliente por id
     obtenerCliente(id: number): Observable<Cliente> {
         return this.http.get<Cliente>(`${this.apiUrl}/${id}`);
+    }
+
+    actualizarCliente(id: number, cliente: EditarClienteRequest) {
+        return this.http.put(`${this.apiUrl}/actualizar/${id}`, cliente);
+    }
+
+    eliminarCliente(id: number): Observable<any> {
+        return this.http.delete<any>(`${this.apiUrl}/eliminar/${id}`);
     }
 }

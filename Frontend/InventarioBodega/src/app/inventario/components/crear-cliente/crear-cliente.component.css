@@ -1,0 +1,44 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: var(--color-header-texto);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(var(--color-texto), 0.1);
+}
+
+/* Encabezado del formulario */
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--color-texto-titulo);
+    font-weight: 600;
+}
+
+/* Estilo general de los botones */
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Ajuste de los iconos de FontAwesome dentro de los botones */
+button i.fa-solid {
+    font-size: 16px;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+/* Opcional: estilo al enfocar inputs */
+.mat-form-field.mat-focused .mat-form-field-outline {
+    border-color: var(--boton-enviar);
+}

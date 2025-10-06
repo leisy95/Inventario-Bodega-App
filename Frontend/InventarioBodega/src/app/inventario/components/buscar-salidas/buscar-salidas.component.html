@@ -7,6 +7,19 @@
         <input matInput [(ngModel)]="filtroReferencia" (ngModelChange)="onScanChange($event)" #inputRef autofocus />
     </mat-form-field>
 
+    <!-- Seleccion de clientes -->
+    <mat-form-field appearance="outline" floatLabel="always" class="form-field">
+        <mat-label>Cliente</mat-label>
+        <input matInput [formControl]="clienteControl" [matAutocomplete]="autoCliente"
+            placeholder="Selecciona un cliente" (focus)="abrirAutocomplete($event)">
+
+        <mat-autocomplete #autoCliente="matAutocomplete" [displayWith]="displayCliente">
+            <mat-option *ngFor="let cliente of clientesFiltrados | async" [value]="cliente">
+                {{ cliente.nombre }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
     <!-- Tabla de items agregados -->
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-100 mt-3">
         <!-- ReferenciaPeso -->

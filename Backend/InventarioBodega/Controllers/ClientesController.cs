@@ -1,5 +1,6 @@
 ﻿
 using InventarioBackend.Data;
+using InventarioBackend.DTOs;
 using InventarioBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,18 @@ namespace InventarioBackend.Controllers
 
         // Crear cliente
         [HttpPost("crear")]
-        public async Task<IActionResult> CrearCliente([FromBody] Cliente cliente)
+        public async Task<IActionResult> CrearCliente([FromBody] ClienteRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var cliente = new Cliente
+            {
+                Nombre = request.Nombre,
+                Direccion = request.Direccion,
+                Telefono = request.Telefono,
+                Email = request.Email
+            };
 
             _context.Clientes.Add(cliente);
             await _context.SaveChangesAsync();
@@ -51,21 +60,32 @@ namespace InventarioBackend.Controllers
 
         // (Opcional) Actualizar cliente
         [HttpPut("actualizar/{id}")]
-        public async Task<IActionResult> ActualizarCliente(int id, [FromBody] Cliente cliente)
+        public async Task<IActionResult> ActualizarCliente(int id, [FromBody] EditarClienteRequest request)
         {
+            if (request.Id != id)
+                return BadRequest(new { message = "El ID en la URL no coincide con el ID del cliente" });
+
             var clienteDb = await _context.Clientes.FindAsync(id);
             if (clienteDb == null)
                 return NotFound(new { message = "Cliente no encontrado" });
 
-            clienteDb.Nombre = cliente.Nombre;
-            clienteDb.Direccion = cliente.Direccion;
-            clienteDb.Telefono = cliente.Telefono;
-            clienteDb.Email = cliente.Email;
+            // Actualizamos solo los campos permitidos
+            clienteDb.Nombre = request.Nombre;
+            clienteDb.Direccion = request.Direccion;
+            clienteDb.Telefono = request.Telefono;
+            clienteDb.Email = request.Email;
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, new { message = "Error al actualizar cliente", error = ex.Message });
+            }
+
             return Ok(new { message = "Cliente actualizado con éxito" });
         }
-
         // (Opcional) Eliminar cliente
         [HttpDelete("eliminar/{id}")]
         public async Task<IActionResult> EliminarCliente(int id)

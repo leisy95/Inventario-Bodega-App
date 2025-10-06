@@ -1,0 +1,37 @@
+<h2>Editar Cliente</h2>
+
+<form [formGroup]="clienteForm" (ngSubmit)="guardarCambios()">
+    <mat-dialog-content>
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Dirección</mat-label>
+            <input matInput formControlName="direccion">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="telefono">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+        </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" style="gap: 10px;">
+        <button mat-stroked-button color="warn" type="button" (click)="cancelar()">
+            <i class="fa-solid fa-xmark" style="margin-right: 5px;"></i>
+            Cancelar
+        </button>
+
+        <button mat-flat-button color="primary" type="submit">
+            <i class="fa-solid fa-floppy-disk" style="margin-right: 5px;"></i>
+            Guardar
+        </button>
+    </mat-dialog-actions>
+</form>

@@ -1,9 +1,61 @@
+h2 {
+    margin-bottom: 1rem;
+    color: var(--color-texto-titulo);
+    font-weight: 600;
+}
+
+.btn-agregar {
+    background-color: var(--color-verde) !important;
+    color: var(--color-header-texto) !important;
+}
+
 .snackbar-success {
-    background-color: #4caf50 !important;
-    color: white !important;
+    background-color: var(--color-exito) !important;
+    color: var(--color-header-texto) !important;
 }
 
 .snackbar-error {
-    background-color: #f44336 !important;
-    color: white !important;
+    background-color: var(--color-advertencia) !important;
+    color: var(--color-header-texto) !important;
+}
+
+table.mat-elevation-z8 {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--color-header-texto);
+}
+
+/* Cabecera con fondo */
+th.mat-header-cell {
+    background-color: var(--color-header-texto);
+    font-weight: 600;
+}
+
+/* Filas alternadas */
+tr.mat-row:nth-child(even) {
+    background-color: var(--color-header-texto);
+}
+
+tr.mat-row:hover {
+    background-color: var(--color-header-texto);
+    transition: background-color 0.3s;
+}
+
+.btn-eliminar,
+.btn-editar {
+  border-radius: 8px;
+  padding: 2px 4px;
+  font-weight: bold;
+  font-size: 12px;
+  min-width: 80px;
+}
+
+.btn-eliminar {
+  background-color: var(--color-boton-eliminar);
+  color: var(--color-header-texto) !important;
+}
+
+.btn-editar {
+  background-color: var(--color-boton-editar);
+  color: var(--color-header-texto) !important;
 }

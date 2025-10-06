@@ -1,0 +1,37 @@
+::ng-deep .custom-dialog .mat-dialog-container {
+    border-radius: 15px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    color: var(--color-texto-titulo);
+    font-weight: 600;
+}
+
+/* Estilo de campos de entrada */
+.full-width {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Estilo de botones */
+.mat-dialog-actions button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    /* espacio entre icono y texto */
+}
+
+/* Botón Guardar */
+.mat-dialog-actions button[color="primary"] {
+    font-weight: 500;
+}
+
+/* Botón Cancelar */
+.mat-dialog-actions button[color="warn"] {
+    font-weight: 500;
+}

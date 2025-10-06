@@ -1,6 +1,7 @@
-export interface CrearCliente {
-  Nombre: string;
-  Direccion?: string;
-  Telefono?: string;
-  Email?: string;
+export interface Cliente {
+  id?: number;      // <-- obligatorio para PUT
+  nombre: string;
+  direccion?: string;
+  telefono?: string;
+  email?: string;
 }

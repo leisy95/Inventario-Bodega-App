@@ -34,6 +34,8 @@ import { BuscarSalidasComponent } from './components/buscar-salidas/buscar-salid
 import { RegistrarEntradaPesoComponent } from './components/registrar-entrada-peso/registrar-entrada-peso.component';
 import { AuditoriaInventarioComponent } from './components/auditoria-inventario/auditoria-inventario.component';
 import { ClientesComponent } from './components/clientes/clientes.component';
+import { EditarClienteComponent } from './components/editar-cliente/editar-cliente.component';
+import { CrearClienteComponent } from './components/crear-cliente/crear-cliente.component';
 
 // Componentes inventario
 
@@ -50,6 +52,8 @@ import { ClientesComponent } from './components/clientes/clientes.component';
     BuscarSalidasComponent,
     AuditoriaInventarioComponent,
     ClientesComponent,
+    EditarClienteComponent,
+    CrearClienteComponent,
   ],
   imports: [
     CommonModule,

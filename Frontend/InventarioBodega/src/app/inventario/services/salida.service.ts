@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class SalidaService {
   private apiUrl = 'http://localhost:5244/api/salidas';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Crear nueva salida en estado EN_PROCESO
   crearSalida(): Observable<any> {
@@ -30,9 +30,10 @@ export class SalidaService {
     return this.http.get(`${this.apiUrl}/actual`);
   }
 
-  // Confirmar salida
-  confirmarSalida(idSalida: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${idSalida}/confirmar`, {});
+  // Confirmar salida + cliente
+  confirmarSalida(idSalida: number, clienteId: number) {
+    // Enviar como objeto JSON que coincida con ConfirmarSalidaRequest
+    return this.http.post(`/api/salidas/${idSalida}/confirmar`, { ClienteId: clienteId });
   }
 
   // Cancelar salida

@@ -75,22 +75,3 @@ export class RegistrarProductoComponent {
     this.dialogRef.close(false);
   }
 }
-
-//   resetForm() {
-//     this.producto = {
-//       id: 0,
-//       referencia: '',
-//       descripcion: '',
-//       tipoBolsa: '',
-//       tipoMaterial: '',
-//       densidad: '',
-//       color: '',
-//       segundoColor: '',
-//       impresoNo: '',
-//       ancho: 0,
-//       alto: 0,
-//       calibre: 0,
-//       peso: 0
-//     };
-//   }
-// }
